@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/motephyr/log"
-	gorm2 "github.com/motephyr/log/gorm"
+	"github.com/sujit-baniya/log"
+	gorm2 "github.com/sujit-baniya/log/gorm"
 	"gorm.io/gorm/logger"
 
 	"gorm.io/driver/mysql"

@@ -18,7 +18,7 @@ import (
 	"github.com/motephyr/longcare/pkg/auth"
 	"github.com/motephyr/longcare/pkg/models"
 	"github.com/motephyr/longcare/utils/xopen"
-	"github.com/motephyr/xid"
+	"github.com/sujit-baniya/xid"
 )
 
 type SearchFilter struct {

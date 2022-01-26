@@ -6,10 +6,10 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/motephyr/log"
 	"github.com/motephyr/longcare/app"
 	config2 "github.com/motephyr/longcare/config"
 	"github.com/motephyr/longcare/pkg/auth"
+	"github.com/sujit-baniya/log"
 
 	"github.com/form3tech-oss/jwt-go"
 	"github.com/gofiber/fiber/v2"

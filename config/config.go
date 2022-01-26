@@ -9,10 +9,10 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/ilyakaznacheev/cleanenv"
 	"github.com/joho/godotenv"
-	"github.com/motephyr/flash"
-	"github.com/motephyr/ip"
-	"github.com/motephyr/log"
-	"github.com/motephyr/sblogger"
+	"github.com/sujit-baniya/flash"
+	"github.com/sujit-baniya/ip"
+	"github.com/sujit-baniya/log"
+	"github.com/sujit-baniya/sblogger"
 )
 
 // Config is a application configuration structure

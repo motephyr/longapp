@@ -16,7 +16,7 @@ import (
 	"github.com/gofiber/template/html"
 	"github.com/mattn/go-colorable"
 	"github.com/mattn/go-isatty"
-	"github.com/motephyr/log"
+	"github.com/sujit-baniya/log"
 )
 
 type ServerConfig struct {

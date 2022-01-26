@@ -1,4 +1,4 @@
-module github.com/sujit-baniya/fiber-boilerplate2
+module github.com/motephyr/longcare
 
 go 1.18
 
