@@ -19,7 +19,7 @@ database:
 server: &server
   name: "Test Server"
   host: localhost
-  port: 8084
+  port: 8080
 
 profiler:
   enabled: false

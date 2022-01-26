@@ -8,6 +8,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/etag"
 	"github.com/gofiber/fiber/v2/middleware/pprof"
 	"github.com/gofiber/fiber/v2/middleware/recover"
+	inertia "github.com/motephyr/fiber-inertia"
 	"github.com/motephyr/longcare/config"
 )
 
@@ -19,7 +20,10 @@ func Load(configFile string) {
 	Http = &config.AppConfig{ConfigFile: configFile}
 	Http.Setup()
 	LoadBuiltInMiddlewares(Http)
-	Http.PayPal.Connect(Http.Server.Env)
+	// Http.PayPal.Connect(Http.Server.Env)
+	Http.Server.Use(inertia.New(inertia.Config{
+		AssetsPath: "./public",
+	}))
 }
 
 func LoadBuiltInMiddlewares(app *config.AppConfig) {
