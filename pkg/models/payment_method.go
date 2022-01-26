@@ -3,7 +3,7 @@ package models
 import (
 	"strings"
 
-	"github.com/sujit-baniya/fiber-boilerplate/app"
+	"github.com/motephyr/longcare/app"
 	"gorm.io/gorm"
 )
 

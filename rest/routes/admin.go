@@ -2,7 +2,7 @@ package routes
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/sujit-baniya/fiber-boilerplate/rest/controllers"
+	"github.com/motephyr/longcare/rest/controllers"
 )
 
 func AdminRoutes(web fiber.Router) {

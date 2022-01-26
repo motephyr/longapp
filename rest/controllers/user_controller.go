@@ -1,10 +1,11 @@
 package controllers
 
 import (
-	"github.com/gofiber/fiber/v2" //nolint:goimports
-	"github.com/sujit-baniya/fiber-boilerplate/pkg/auth"
-	"github.com/sujit-baniya/fiber-boilerplate/pkg/models"
 	"strconv"
+
+	"github.com/gofiber/fiber/v2" //nolint:goimports
+	"github.com/motephyr/longcare/pkg/auth"
+	"github.com/motephyr/longcare/pkg/models"
 )
 
 func UserList(c *fiber.Ctx) error {

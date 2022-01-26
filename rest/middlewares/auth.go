@@ -3,12 +3,13 @@ package middlewares
 import (
 	"errors"
 	"fmt"
-	"github.com/sujit-baniya/fiber-boilerplate/app"
-	config2 "github.com/sujit-baniya/fiber-boilerplate/config"
-	"github.com/sujit-baniya/fiber-boilerplate/pkg/auth"
-	"github.com/sujit-baniya/log"
 	"reflect"
 	"strings"
+
+	"github.com/motephyr/log"
+	"github.com/motephyr/longcare/app"
+	config2 "github.com/motephyr/longcare/config"
+	"github.com/motephyr/longcare/pkg/auth"
 
 	"github.com/form3tech-oss/jwt-go"
 	"github.com/gofiber/fiber/v2"

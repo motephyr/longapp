@@ -2,7 +2,6 @@ package config
 
 import (
 	"fmt"
-	"github.com/pkg/errors"
 	"os"
 	"os/signal"
 	"path/filepath"
@@ -11,11 +10,13 @@ import (
 	"strings"
 	"syscall"
 
+	"github.com/pkg/errors"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/template/html"
 	"github.com/mattn/go-colorable"
 	"github.com/mattn/go-isatty"
-	"github.com/sujit-baniya/log"
+	"github.com/motephyr/log"
 )
 
 type ServerConfig struct {

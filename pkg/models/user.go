@@ -2,11 +2,12 @@ package models
 
 import (
 	"fmt"
-	"github.com/sujit-baniya/fiber-boilerplate/config"
 	"strconv"
 	"time"
 
-	"github.com/sujit-baniya/fiber-boilerplate/app"
+	"github.com/motephyr/longcare/config"
+
+	"github.com/motephyr/longcare/app"
 	"gorm.io/gorm"
 )
 

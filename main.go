@@ -4,10 +4,10 @@ import (
 	"flag"
 	"log"
 
+	"github.com/motephyr/longcare/app"
+	"github.com/motephyr/longcare/migrations"
+	"github.com/motephyr/longcare/rest/routes"
 	"github.com/pyroscope-io/pyroscope/pkg/agent/profiler"
-	"github.com/sujit-baniya/fiber-boilerplate/app"
-	"github.com/sujit-baniya/fiber-boilerplate/migrations"
-	"github.com/sujit-baniya/fiber-boilerplate/rest/routes"
 )
 
 func main() {

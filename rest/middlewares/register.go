@@ -2,13 +2,14 @@ package middlewares
 
 import (
 	"fmt"
-	"github.com/sujit-baniya/fiber-boilerplate/utils"
+
+	"github.com/motephyr/longcare/utils"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gookit/validate"
-	"github.com/sujit-baniya/fiber-boilerplate/app"
-	"github.com/sujit-baniya/fiber-boilerplate/pkg/auth"
-	"github.com/sujit-baniya/fiber-boilerplate/pkg/models"
+	"github.com/motephyr/longcare/app"
+	"github.com/motephyr/longcare/pkg/auth"
+	"github.com/motephyr/longcare/pkg/models"
 )
 
 func ValidateRegisterPost(c *fiber.Ctx) error {

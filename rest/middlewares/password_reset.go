@@ -2,13 +2,14 @@ package middlewares
 
 import (
 	"errors"
-	"github.com/sujit-baniya/fiber-boilerplate/utils"
 	"strconv"
 	"strings"
 	"time"
 
+	"github.com/motephyr/longcare/utils"
+
 	"github.com/gofiber/fiber/v2"
-	"github.com/sujit-baniya/fiber-boilerplate/app"
+	"github.com/motephyr/longcare/app"
 )
 
 func ValidatePasswordReset(c *fiber.Ctx) error {

@@ -1,8 +1,8 @@
 package models
 
 import (
+	"github.com/motephyr/longcare/app"
 	"github.com/plutov/paypal/v3"
-	"github.com/sujit-baniya/fiber-boilerplate/app"
 	"gorm.io/gorm"
 )
 

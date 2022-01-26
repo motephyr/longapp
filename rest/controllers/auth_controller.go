@@ -2,9 +2,9 @@ package controllers
 
 import (
 	"github.com/gofiber/fiber/v2" //nolint:goimports
-	"github.com/sujit-baniya/fiber-boilerplate/app"
-	"github.com/sujit-baniya/fiber-boilerplate/pkg/auth"
-	"github.com/sujit-baniya/fiber-boilerplate/pkg/models"
+	"github.com/motephyr/longcare/app"
+	"github.com/motephyr/longcare/pkg/auth"
+	"github.com/motephyr/longcare/pkg/models"
 )
 
 func LoginGet(c *fiber.Ctx) error {

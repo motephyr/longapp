@@ -1,6 +1,6 @@
-module github.com/sujit-baniya/fiber-boilerplate
+module github.com/sujit-baniya/fiber-boilerplate2
 
-go 1.17
+go 1.18
 
 require (
 	github.com/BurntSushi/toml v1.0.0 // indirect
@@ -12,7 +12,7 @@ require (
 	github.com/form3tech-oss/jwt-go v3.2.5+incompatible
 	github.com/go-redis/redis/v8 v8.11.4 // indirect
 	github.com/gobuffalo/here v0.6.5 // indirect
-	github.com/gofiber/fiber/v2 v2.24.0
+	github.com/gofiber/fiber/v2 v2.25.0
 	github.com/gofiber/session/v2 v2.0.2
 	github.com/gofiber/storage/redis v0.0.0-20220110080530-864b9a01e0b4
 	github.com/gofiber/template v1.6.21
@@ -72,17 +72,22 @@ require (
 	github.com/jackc/pgx/v4 v4.14.1 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.4 // indirect
-	github.com/klauspost/compress v1.14.1 // indirect
+	github.com/klauspost/compress v1.14.2 // indirect
 	github.com/kr/pretty v0.3.0 // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/mitchellh/go-ps v1.0.0 // indirect
+	github.com/motephyr/fiber-inertia v0.0.0-20220107132648-2cc305accf44 // indirect
 	github.com/oschwald/maxminddb-golang v1.8.0 // indirect
 	github.com/philhofer/fwd v1.1.1 // indirect
 	github.com/pyroscope-io/dotnetdiag v1.2.1 // indirect
 	github.com/rogpeppe/go-internal v1.6.1 // indirect
 	github.com/savsgio/dictpool v0.0.0-20210921080634-84324d0689d7 // indirect
 	github.com/savsgio/gotils v0.0.0-20211223103454-d0aaa54c5899 // indirect
+	github.com/tidwall/gjson v1.13.0 // indirect
+	github.com/tidwall/match v1.1.1 // indirect
+	github.com/tidwall/pretty v1.2.0 // indirect
+	github.com/tidwall/sjson v1.2.4 // indirect
 	github.com/tinylib/msgp v1.1.6 // indirect
 	github.com/tklauser/numcpus v0.3.0 // indirect
 	github.com/valyala/fasthttp v1.32.0 // indirect

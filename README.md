@@ -1,35 +1,6 @@
 
-### Looking for some more features or ideas??? Let's discuss on Discussions.
-
-This is the go boilerplate on the top of fiber web framework.
-
-With simple setup, you can use many features out of the box.
-
-For details, visit [Documentation](https://sujit-baniya.gitbook.io/fiber-boilerplate/)
-
-The features include:
-
-* Basic Auth with Login,Register
-* Email confirmation on Registration
-* Role based authorization using Casbin
-* File uploads
-* UI on Tailwind. Setup ready for VueJS integration
-* Laravel mix for UI
-* Payment processing via PayPal
-* Logging via Phuslu/Log with file rotation
-* PostGres or MySQL with GORM V2
-* REST API Authentication with JWT
-* APP and API Separation based on JWT Token
-* REST based basic auth
-* Use of Redis for Cache and Session
-* Hot Reload with Air
-* Flash Message based on cookies
-* Easy Config Settings based on .env
-* Setup for Docker
-* Easy and Almost Zero Downtime Production Deployment with Makefile
-
 # Installation
-* Clone the repo `git clone https://github.com/sujit-baniya/fiber-boilerplate.git`
+* Clone the repo `git clone https://github.com/motephyr/longcare.git`
 * Make sure you have installed: Redis, MySQL or Postgres
 * Copy .env.sample to .env
 * To build the frontend, install nodejs

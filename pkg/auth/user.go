@@ -3,12 +3,13 @@ package auth
 import (
 	"errors"
 	"fmt"
-	"github.com/sujit-baniya/fiber-boilerplate/config"
+
+	"github.com/motephyr/longcare/config"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/session/v2"
-	"github.com/sujit-baniya/fiber-boilerplate/app"
-	"github.com/sujit-baniya/fiber-boilerplate/pkg/models"
+	"github.com/motephyr/longcare/app"
+	"github.com/motephyr/longcare/pkg/models"
 )
 
 func User(c *fiber.Ctx) (*models.User, error) {

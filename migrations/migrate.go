@@ -3,8 +3,8 @@ package migrations
 import (
 	"log"
 
-	"github.com/sujit-baniya/fiber-boilerplate/app"
-	"github.com/sujit-baniya/fiber-boilerplate/pkg/models"
+	"github.com/motephyr/longcare/app"
+	"github.com/motephyr/longcare/pkg/models"
 )
 
 func Migrate() {

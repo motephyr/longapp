@@ -2,10 +2,11 @@ package models
 
 import (
 	"fmt"
-	"github.com/sujit-baniya/fiber-boilerplate/config"
 
+	"github.com/motephyr/longcare/config"
+
+	"github.com/motephyr/longcare/app"
 	"github.com/plutov/paypal/v3"
-	"github.com/sujit-baniya/fiber-boilerplate/app"
 )
 
 type PayPal struct {

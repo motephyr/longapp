@@ -2,7 +2,7 @@ package middlewares
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/sujit-baniya/fiber-boilerplate/pkg/auth"
+	"github.com/motephyr/longcare/pkg/auth"
 )
 
 func LimitPhoneNumbersPerRequest(c *fiber.Ctx) error {

@@ -2,10 +2,11 @@ package config
 
 import (
 	"fmt"
-	"github.com/sujit-baniya/log"
-	gorm2 "github.com/sujit-baniya/log/gorm"
-	"gorm.io/gorm/logger"
 	"time"
+
+	"github.com/motephyr/log"
+	gorm2 "github.com/motephyr/log/gorm"
+	"gorm.io/gorm/logger"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"

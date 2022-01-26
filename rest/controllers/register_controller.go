@@ -2,10 +2,10 @@ package controllers
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/sujit-baniya/fiber-boilerplate/app"
-	"github.com/sujit-baniya/fiber-boilerplate/pkg/auth"
-	"github.com/sujit-baniya/fiber-boilerplate/pkg/models"
-	"github.com/sujit-baniya/fiber-boilerplate/pkg/services"
+	"github.com/motephyr/longcare/app"
+	"github.com/motephyr/longcare/pkg/auth"
+	"github.com/motephyr/longcare/pkg/models"
+	"github.com/motephyr/longcare/pkg/services"
 )
 
 func RegisterGet(c *fiber.Ctx) error {

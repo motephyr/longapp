@@ -2,10 +2,11 @@ package services
 
 import (
 	"fmt"
-	"github.com/gofiber/fiber/v2"
-	"github.com/sujit-baniya/fiber-boilerplate/app"
-	"github.com/sujit-baniya/fiber-boilerplate/utils"
 	"time"
+
+	"github.com/gofiber/fiber/v2"
+	"github.com/motephyr/longcare/app"
+	"github.com/motephyr/longcare/utils"
 )
 
 func SendPasswordResetEmail(email string, baseURL string) {
