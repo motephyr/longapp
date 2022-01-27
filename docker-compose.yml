@@ -1,0 +1,33 @@
+version: "3.8"
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.air
+    environment:
+      DB_HOST: host.docker.internal
+      STORAGE_HOST: host.docker.internal
+      CACHE_HOST: host.docker.internal
+      SESSION_HOST: host.docker.internal
+      GRAYLOG_HOST: host.docker.internal
+    ports:
+      - 8080:8080
+    volumes:
+      - ./:/app 
+
+  node:
+    build:
+      context: .
+      dockerfile: Dockerfile.node
+    volumes:
+      - ./:/app             #取得變更
+      - ./node_modules:/app/node_modules/
+    depends_on:
+      - web
+      
+  redis:
+    image: redis:alpine
+    ports:
+      - 6379:6379
+    volumes:
+      - ./tmp/:/data

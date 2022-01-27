@@ -74,7 +74,7 @@ func (s *ServerConfig) Setup() {
 
 //
 func (s *ServerConfig) Serve(addr ...string) error {
-	a := s.Host + ":" + s.Port
+	a := ":" + s.Port
 	if len(addr) != 0 {
 		a = addr[0]
 	}
@@ -84,7 +84,7 @@ func (s *ServerConfig) Serve(addr ...string) error {
 
 //
 func (s *ServerConfig) ServeWithGraceFullShutdown(addr ...string) error {
-	a := s.Host + ":" + s.Port
+	a := ":" + s.Port
 	if len(addr) != 0 {
 		a = addr[0]
 	}

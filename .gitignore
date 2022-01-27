@@ -15,3 +15,5 @@ awstatsicons
 icon/
 stats/
 public/
+
+.env*
