@@ -1,22 +1,23 @@
 package config
 
 import (
+	"database/sql"
 	"fmt"
+
+	sqladapter "github.com/Blank-Xu/sql-adapter"
 	"github.com/casbin/casbin/v2"
-	gormadapter "github.com/casbin/gorm-adapter/v3"
 	"github.com/gofiber/fiber/v2"
-	"gorm.io/gorm"
 )
 
 type AuthConfig struct {
-	*gormadapter.Adapter
+	*sqladapter.Adapter
 	Type     string `yaml:"type" env:"AUTH_TYPE" env-default:"simple"`
 	Casbin   *Casbin
 	Enforcer *casbin.Enforcer
 }
 
-func (d *AuthConfig) Setup(db *gorm.DB, file string) {
-	adapter, err := gormadapter.NewAdapterByDB(db)
+func (d *AuthConfig) Setup(db *sql.DB, file string) {
+	adapter, err := sqladapter.NewAdapter(db, "postgres", "")
 
 	if err != nil {
 		panic(fmt.Sprintf("failed to initialize casbin adapter: %v", err))

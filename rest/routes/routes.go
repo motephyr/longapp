@@ -12,5 +12,11 @@ func LoadRoutes(app *fiber.App) {
 	// WebRoutes(web)
 
 	app.Get("/", controllers.Index)
+	sources := app.Group("sources")
+	sources.Get("/", controllers.SourceController.List)
+	sources.Post("/", controllers.SourceController.Create)
+	sources.Get("/:id", controllers.SourceController.Find)
+	sources.Put("/:id", controllers.SourceController.Update)
+	sources.Delete("/:id", controllers.SourceController.Delete)
 
 }

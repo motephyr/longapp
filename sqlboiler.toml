@@ -1,0 +1,12 @@
+wipe     = true
+add-enum-types = true
+no-context = true
+
+[psql]
+  dbname = "happiness"
+  host   = "localhost"
+  port   = 5432
+  user   = "postgres"
+  pass   = "localhost"
+  sslmode = "disable"
+  blacklist = ["migrations", "adonis_schema"]

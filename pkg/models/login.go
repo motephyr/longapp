@@ -1,10 +1,7 @@
 package models
 
 import (
-	"errors"
-
 	"github.com/gookit/validate"
-	"github.com/motephyr/longcare/app"
 )
 
 type Login struct {
@@ -24,15 +21,15 @@ func (Login) TableName() string {
 	return "users"
 }
 
-func (l *Login) CheckLogin() (*User, error) {
+// func (l *Login) CheckLogin() (*User, error) {
 
-	user, err := GetVerifiedUserByEmail(l.Email)
-	if err != nil {
-		return nil, errors.New("invalid Username or Password")
-	}
-	match, err := app.Http.Hash.Match(l.Password, user.Password)
-	if !match {
-		return nil, errors.New("invalid Username or Password")
-	}
-	return user, nil
-}
+// 	user, err := GetVerifiedUserByEmail(l.Email)
+// 	if err != nil {
+// 		return nil, errors.New("invalid Username or Password")
+// 	}
+// 	match, err := app.Http.Hash.Match(l.Password, user.Password)
+// 	if !match {
+// 		return nil, errors.New("invalid Username or Password")
+// 	}
+// 	return user, nil
+// }

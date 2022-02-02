@@ -6,9 +6,7 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/motephyr/longcare/app"
 	config2 "github.com/motephyr/longcare/config"
-	"github.com/motephyr/longcare/pkg/auth"
 	"github.com/sujit-baniya/log"
 
 	"github.com/form3tech-oss/jwt-go"
@@ -221,34 +219,4 @@ func jwtFromCookie(name string) func(c *fiber.Ctx) (string, error) {
 		}
 		return token, nil
 	}
-}
-
-func AuthWeb() func(*fiber.Ctx) error {
-	return Authenticate(AuthConfig{
-		SigningKey:  []byte(app.Http.Token.AppJwtSecret),
-		TokenLookup: "cookie:Verify-Rest-Token",
-		ErrorHandler: func(ctx *fiber.Ctx, err error) error {
-			auth.Logout(ctx)
-			return ctx.Redirect("/login")
-		},
-	})
-}
-
-func AuthAdmin(c *fiber.Ctx) error {
-	if !auth.IsAdmin(c) {
-		auth.Logout(c)
-		return c.Redirect("/login")
-	}
-	return c.Next()
-}
-
-func AuthApi() func(*fiber.Ctx) error {
-	return Authenticate(AuthConfig{
-		SigningKey:  []byte(app.Http.Token.ApiJwtSecret),
-		TokenLookup: "header:Verify-Rest-Token",
-		ErrorHandler: func(ctx *fiber.Ctx, err error) error {
-			auth.Logout(ctx)
-			return ctx.Status(401).JSON("Invalid Attempt")
-		},
-	})
 }

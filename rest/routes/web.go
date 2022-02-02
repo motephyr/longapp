@@ -6,6 +6,6 @@ import (
 
 func WebRoutes(web fiber.Router) {
 	LandingRoutes(web)
-	WebAuthRoutes(web)
-	UserRoutes(web)
+	// WebAuthRoutes(web)
+	// UserRoutes(web)
 }

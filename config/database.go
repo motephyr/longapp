@@ -1,17 +1,10 @@
 package config
 
 import (
+	"database/sql"
 	"fmt"
-	"time"
 
-	"github.com/sujit-baniya/log"
-	gorm2 "github.com/sujit-baniya/log/gorm"
-	"gorm.io/gorm/logger"
-
-	"gorm.io/driver/mysql"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
-	"gorm.io/plugin/dbresolver"
+	_ "github.com/lib/pq"
 )
 
 type DatabaseDriver struct {
@@ -25,7 +18,7 @@ type DatabaseDriver struct {
 }
 
 type DatabaseConfig struct {
-	*gorm.DB
+	*sql.DB
 	Drivers map[string]DatabaseDriver `yaml:"drivers"`
 	Default DatabaseDriver            `yaml:"default" env:"DEFAULT_DB_DRIVER"`
 }
@@ -34,37 +27,35 @@ func (d *DatabaseConfig) Setup() error {
 	//nolint:wsl,lll
 	var err error //nolint:wsl
 	connectionString := ""
+
 	if d.DB != nil {
 		return nil
 	}
-	gormLogger := gorm2.Logger{
-		Log: &log.DefaultLogger,
-	}
-	newLogger := gormLogger.LogMode(logger.Info)
+	// gormLogger := gorm2.Logger{
+	// 	Log: &log.DefaultLogger,
+	// }
+	// newLogger := gormLogger.LogMode(logger.Info)
 	switch d.Default.Driver {
 	case "postgres":
-		connectionString = fmt.Sprintf("host=%s port=%d user=%s dbname=%s password=%s", d.Default.Host, d.Default.Port, d.Default.Username, d.Default.DBName, d.Default.Password)
-		d.DB, err = gorm.Open(postgres.Open(connectionString), &gorm.Config{
-			DisableForeignKeyConstraintWhenMigrating: true,
-			Logger:                                   newLogger,
-		})
+		connectionString = fmt.Sprintf("host=%s port=%d user=%s dbname=%s password=%s sslmode=disable", d.Default.Host, d.Default.Port, d.Default.Username, d.Default.DBName, d.Default.Password)
+		d.DB, err = sql.Open("postgres", connectionString)
 
 	default:
 		connectionString = fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8&parseTime=True&loc=Local", d.Default.Username, d.Default.Password, d.Default.Host, d.Default.Port, d.Default.DBName)
-		d.DB, err = gorm.Open(mysql.Open(connectionString), &gorm.Config{
-			DisableForeignKeyConstraintWhenMigrating: true,
-			Logger:                                   newLogger,
-		})
+		d.DB, err = sql.Open(d.Default.Driver, connectionString)
+
 	}
 	if err != nil {
 		fmt.Println(d.Default)
 		panic(err)
 	}
-	d.DB.Use(
-		dbresolver.Register(dbresolver.Config{}).
-			SetConnMaxLifetime(24 * time.Hour).
-			SetMaxIdleConns(100).
-			SetMaxOpenConns(100),
-	)
+	// boil.SetDB(d.DB)
+
+	// d.DB.Use(
+	// 	dbresolver.Register(dbresolver.Config{}).
+	// 		SetConnMaxLifetime(24 * time.Hour).
+	// 		SetMaxIdleConns(100).
+	// 		SetMaxOpenConns(100),
+	// )
 	return nil //nolint:wsl
 }

@@ -3,8 +3,8 @@ package config
 import (
 	"strings"
 
+	sqladapter "github.com/Blank-Xu/sql-adapter"
 	"github.com/casbin/casbin/v2"
-	gormadapter "github.com/casbin/gorm-adapter/v3"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -16,7 +16,7 @@ type CasbinAuthConfig struct {
 
 	// PolicyAdapter is an interface for different persistent providers.
 	// Optional. Default: fileadapter.NewAdapter("./policy.csv").
-	PolicyAdapter *gormadapter.Adapter
+	PolicyAdapter *sqladapter.Adapter
 
 	// Lookup is a function that is used to look up current subject.
 	// An empty string is considered as unauthenticated user.
