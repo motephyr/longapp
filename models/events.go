@@ -342,6 +342,11 @@ func AddEventHook(hookPoint boil.HookPoint, eventHook EventHook) {
 	}
 }
 
+// OneG returns a single event record from the query using the global executor.
+func (q eventQuery) OneG() (*Event, error) {
+	return q.One(boil.GetDB())
+}
+
 // One returns a single event record from the query.
 func (q eventQuery) One(exec boil.Executor) (*Event, error) {
 	o := &Event{}
@@ -361,6 +366,11 @@ func (q eventQuery) One(exec boil.Executor) (*Event, error) {
 	}
 
 	return o, nil
+}
+
+// AllG returns all Event records from the query using the global executor.
+func (q eventQuery) AllG() (EventSlice, error) {
+	return q.All(boil.GetDB())
 }
 
 // All returns all Event records from the query.
@@ -383,6 +393,11 @@ func (q eventQuery) All(exec boil.Executor) (EventSlice, error) {
 	return o, nil
 }
 
+// CountG returns the count of all Event records in the query, and panics on error.
+func (q eventQuery) CountG() (int64, error) {
+	return q.Count(boil.GetDB())
+}
+
 // Count returns the count of all Event records in the query.
 func (q eventQuery) Count(exec boil.Executor) (int64, error) {
 	var count int64
@@ -396,6 +411,11 @@ func (q eventQuery) Count(exec boil.Executor) (int64, error) {
 	}
 
 	return count, nil
+}
+
+// ExistsG checks if the row exists in the table, and panics on error.
+func (q eventQuery) ExistsG() (bool, error) {
+	return q.Exists(boil.GetDB())
 }
 
 // Exists checks if the row exists in the table.
@@ -418,6 +438,11 @@ func (q eventQuery) Exists(exec boil.Executor) (bool, error) {
 func Events(mods ...qm.QueryMod) eventQuery {
 	mods = append(mods, qm.From("\"events\""))
 	return eventQuery{NewQuery(mods...)}
+}
+
+// FindEventG retrieves a single record by ID.
+func FindEventG(iD int, selectCols ...string) (*Event, error) {
+	return FindEvent(boil.GetDB(), iD, selectCols...)
 }
 
 // FindEvent retrieves a single record by ID with an executor.
@@ -448,6 +473,11 @@ func FindEvent(exec boil.Executor, iD int, selectCols ...string) (*Event, error)
 	}
 
 	return eventObj, nil
+}
+
+// InsertG a single record. See Insert for whitelist behavior description.
+func (o *Event) InsertG(columns boil.Columns) error {
+	return o.Insert(boil.GetDB(), columns)
 }
 
 // Insert a single record using an executor.
@@ -536,6 +566,12 @@ func (o *Event) Insert(exec boil.Executor, columns boil.Columns) error {
 	return o.doAfterInsertHooks(exec)
 }
 
+// UpdateG a single Event record using the global executor.
+// See Update for more documentation.
+func (o *Event) UpdateG(columns boil.Columns) (int64, error) {
+	return o.Update(boil.GetDB(), columns)
+}
+
 // Update uses an executor to update the Event.
 // See boil.Columns.UpdateColumnSet documentation to understand column list inference for updates.
 // Update does not automatically update the record in case of default values. Use .Reload() to refresh the records.
@@ -602,6 +638,11 @@ func (o *Event) Update(exec boil.Executor, columns boil.Columns) (int64, error) 
 	return rowsAff, o.doAfterUpdateHooks(exec)
 }
 
+// UpdateAllG updates all rows with the specified column values.
+func (q eventQuery) UpdateAllG(cols M) (int64, error) {
+	return q.UpdateAll(boil.GetDB(), cols)
+}
+
 // UpdateAll updates all rows with the specified column values.
 func (q eventQuery) UpdateAll(exec boil.Executor, cols M) (int64, error) {
 	queries.SetUpdate(q.Query, cols)
@@ -617,6 +658,11 @@ func (q eventQuery) UpdateAll(exec boil.Executor, cols M) (int64, error) {
 	}
 
 	return rowsAff, nil
+}
+
+// UpdateAllG updates all rows with the specified column values.
+func (o EventSlice) UpdateAllG(cols M) (int64, error) {
+	return o.UpdateAll(boil.GetDB(), cols)
 }
 
 // UpdateAll updates all rows with the specified column values, using an executor.
@@ -664,6 +710,11 @@ func (o EventSlice) UpdateAll(exec boil.Executor, cols M) (int64, error) {
 		return 0, errors.Wrap(err, "models: unable to retrieve rows affected all in update all event")
 	}
 	return rowsAff, nil
+}
+
+// UpsertG attempts an insert, and does an update or ignore on conflict.
+func (o *Event) UpsertG(updateOnConflict bool, conflictColumns []string, updateColumns, insertColumns boil.Columns) error {
+	return o.Upsert(boil.GetDB(), updateOnConflict, conflictColumns, updateColumns, insertColumns)
 }
 
 // Upsert attempts an insert using an executor, and does an update or ignore on conflict.
@@ -787,6 +838,12 @@ func (o *Event) Upsert(exec boil.Executor, updateOnConflict bool, conflictColumn
 	return o.doAfterUpsertHooks(exec)
 }
 
+// DeleteG deletes a single Event record.
+// DeleteG will match against the primary key column to find the record to delete.
+func (o *Event) DeleteG() (int64, error) {
+	return o.Delete(boil.GetDB())
+}
+
 // Delete deletes a single Event record with an executor.
 // Delete will match against the primary key column to find the record to delete.
 func (o *Event) Delete(exec boil.Executor) (int64, error) {
@@ -822,6 +879,10 @@ func (o *Event) Delete(exec boil.Executor) (int64, error) {
 	return rowsAff, nil
 }
 
+func (q eventQuery) DeleteAllG() (int64, error) {
+	return q.DeleteAll(boil.GetDB())
+}
+
 // DeleteAll deletes all matching rows.
 func (q eventQuery) DeleteAll(exec boil.Executor) (int64, error) {
 	if q.Query == nil {
@@ -841,6 +902,11 @@ func (q eventQuery) DeleteAll(exec boil.Executor) (int64, error) {
 	}
 
 	return rowsAff, nil
+}
+
+// DeleteAllG deletes all rows in the slice.
+func (o EventSlice) DeleteAllG() (int64, error) {
+	return o.DeleteAll(boil.GetDB())
 }
 
 // DeleteAll deletes all rows in the slice, using an executor.
@@ -891,6 +957,15 @@ func (o EventSlice) DeleteAll(exec boil.Executor) (int64, error) {
 	return rowsAff, nil
 }
 
+// ReloadG refetches the object from the database using the primary keys.
+func (o *Event) ReloadG() error {
+	if o == nil {
+		return errors.New("models: no Event provided for reload")
+	}
+
+	return o.Reload(boil.GetDB())
+}
+
 // Reload refetches the object from the database
 // using the primary keys with an executor.
 func (o *Event) Reload(exec boil.Executor) error {
@@ -901,6 +976,16 @@ func (o *Event) Reload(exec boil.Executor) error {
 
 	*o = *ret
 	return nil
+}
+
+// ReloadAllG refetches every row with matching primary key column values
+// and overwrites the original object slice with the newly updated slice.
+func (o *EventSlice) ReloadAllG() error {
+	if o == nil {
+		return errors.New("models: empty EventSlice provided for reload all")
+	}
+
+	return o.ReloadAll(boil.GetDB())
 }
 
 // ReloadAll refetches every row with matching primary key column values
@@ -930,6 +1015,11 @@ func (o *EventSlice) ReloadAll(exec boil.Executor) error {
 	*o = slice
 
 	return nil
+}
+
+// EventExistsG checks if the Event row exists.
+func EventExistsG(iD int) (bool, error) {
+	return EventExists(boil.GetDB(), iD)
 }
 
 // EventExists checks if the Event row exists.

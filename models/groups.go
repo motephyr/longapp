@@ -316,6 +316,11 @@ func AddGroupHook(hookPoint boil.HookPoint, groupHook GroupHook) {
 	}
 }
 
+// OneG returns a single group record from the query using the global executor.
+func (q groupQuery) OneG() (*Group, error) {
+	return q.One(boil.GetDB())
+}
+
 // One returns a single group record from the query.
 func (q groupQuery) One(exec boil.Executor) (*Group, error) {
 	o := &Group{}
@@ -335,6 +340,11 @@ func (q groupQuery) One(exec boil.Executor) (*Group, error) {
 	}
 
 	return o, nil
+}
+
+// AllG returns all Group records from the query using the global executor.
+func (q groupQuery) AllG() (GroupSlice, error) {
+	return q.All(boil.GetDB())
 }
 
 // All returns all Group records from the query.
@@ -357,6 +367,11 @@ func (q groupQuery) All(exec boil.Executor) (GroupSlice, error) {
 	return o, nil
 }
 
+// CountG returns the count of all Group records in the query, and panics on error.
+func (q groupQuery) CountG() (int64, error) {
+	return q.Count(boil.GetDB())
+}
+
 // Count returns the count of all Group records in the query.
 func (q groupQuery) Count(exec boil.Executor) (int64, error) {
 	var count int64
@@ -370,6 +385,11 @@ func (q groupQuery) Count(exec boil.Executor) (int64, error) {
 	}
 
 	return count, nil
+}
+
+// ExistsG checks if the row exists in the table, and panics on error.
+func (q groupQuery) ExistsG() (bool, error) {
+	return q.Exists(boil.GetDB())
 }
 
 // Exists checks if the row exists in the table.
@@ -629,6 +649,14 @@ func (groupL) LoadSources(e boil.Executor, singular bool, maybeGroup interface{}
 	return nil
 }
 
+// SetOlderG of the group to the related item.
+// Sets o.R.Older to related.
+// Adds o to related.R.Groups.
+// Uses the global database handle.
+func (o *Group) SetOlderG(insert bool, related *Older) error {
+	return o.SetOlder(boil.GetDB(), insert, related)
+}
+
 // SetOlder of the group to the related item.
 // Sets o.R.Older to related.
 // Adds o to related.R.Groups.
@@ -675,6 +703,14 @@ func (o *Group) SetOlder(exec boil.Executor, insert bool, related *Older) error 
 	return nil
 }
 
+// RemoveOlderG relationship.
+// Sets o.R.Older to nil.
+// Removes o from all passed in related items' relationships struct (Optional).
+// Uses the global database handle.
+func (o *Group) RemoveOlderG(related *Older) error {
+	return o.RemoveOlder(boil.GetDB(), related)
+}
+
 // RemoveOlder relationship.
 // Sets o.R.Older to nil.
 // Removes o from all passed in related items' relationships struct (Optional).
@@ -706,6 +742,15 @@ func (o *Group) RemoveOlder(exec boil.Executor, related *Older) error {
 		break
 	}
 	return nil
+}
+
+// AddSourcesG adds the given related objects to the existing relationships
+// of the group, optionally inserting them as new records.
+// Appends related to o.R.Sources.
+// Sets related.R.Group appropriately.
+// Uses the global database handle.
+func (o *Group) AddSourcesG(insert bool, related ...*Source) error {
+	return o.AddSources(boil.GetDB(), insert, related...)
 }
 
 // AddSources adds the given related objects to the existing relationships
@@ -760,6 +805,17 @@ func (o *Group) AddSources(exec boil.Executor, insert bool, related ...*Source) 
 	return nil
 }
 
+// SetSourcesG removes all previously related items of the
+// group replacing them completely with the passed
+// in related items, optionally inserting them as new records.
+// Sets o.R.Group's Sources accordingly.
+// Replaces o.R.Sources with related.
+// Sets related.R.Group's Sources accordingly.
+// Uses the global database handle.
+func (o *Group) SetSourcesG(insert bool, related ...*Source) error {
+	return o.SetSources(boil.GetDB(), insert, related...)
+}
+
 // SetSources removes all previously related items of the
 // group replacing them completely with the passed
 // in related items, optionally inserting them as new records.
@@ -791,6 +847,14 @@ func (o *Group) SetSources(exec boil.Executor, insert bool, related ...*Source) 
 		o.R.Sources = nil
 	}
 	return o.AddSources(exec, insert, related...)
+}
+
+// RemoveSourcesG relationships from objects passed in.
+// Removes related items from R.Sources (uses pointer comparison, removal does not keep order)
+// Sets related.R.Group.
+// Uses the global database handle.
+func (o *Group) RemoveSourcesG(related ...*Source) error {
+	return o.RemoveSources(boil.GetDB(), related...)
 }
 
 // RemoveSources relationships from objects passed in.
@@ -839,6 +903,11 @@ func Groups(mods ...qm.QueryMod) groupQuery {
 	return groupQuery{NewQuery(mods...)}
 }
 
+// FindGroupG retrieves a single record by ID.
+func FindGroupG(iD int, selectCols ...string) (*Group, error) {
+	return FindGroup(boil.GetDB(), iD, selectCols...)
+}
+
 // FindGroup retrieves a single record by ID with an executor.
 // If selectCols is empty Find will return all columns.
 func FindGroup(exec boil.Executor, iD int, selectCols ...string) (*Group, error) {
@@ -867,6 +936,11 @@ func FindGroup(exec boil.Executor, iD int, selectCols ...string) (*Group, error)
 	}
 
 	return groupObj, nil
+}
+
+// InsertG a single record. See Insert for whitelist behavior description.
+func (o *Group) InsertG(columns boil.Columns) error {
+	return o.Insert(boil.GetDB(), columns)
 }
 
 // Insert a single record using an executor.
@@ -955,6 +1029,12 @@ func (o *Group) Insert(exec boil.Executor, columns boil.Columns) error {
 	return o.doAfterInsertHooks(exec)
 }
 
+// UpdateG a single Group record using the global executor.
+// See Update for more documentation.
+func (o *Group) UpdateG(columns boil.Columns) (int64, error) {
+	return o.Update(boil.GetDB(), columns)
+}
+
 // Update uses an executor to update the Group.
 // See boil.Columns.UpdateColumnSet documentation to understand column list inference for updates.
 // Update does not automatically update the record in case of default values. Use .Reload() to refresh the records.
@@ -1021,6 +1101,11 @@ func (o *Group) Update(exec boil.Executor, columns boil.Columns) (int64, error) 
 	return rowsAff, o.doAfterUpdateHooks(exec)
 }
 
+// UpdateAllG updates all rows with the specified column values.
+func (q groupQuery) UpdateAllG(cols M) (int64, error) {
+	return q.UpdateAll(boil.GetDB(), cols)
+}
+
 // UpdateAll updates all rows with the specified column values.
 func (q groupQuery) UpdateAll(exec boil.Executor, cols M) (int64, error) {
 	queries.SetUpdate(q.Query, cols)
@@ -1036,6 +1121,11 @@ func (q groupQuery) UpdateAll(exec boil.Executor, cols M) (int64, error) {
 	}
 
 	return rowsAff, nil
+}
+
+// UpdateAllG updates all rows with the specified column values.
+func (o GroupSlice) UpdateAllG(cols M) (int64, error) {
+	return o.UpdateAll(boil.GetDB(), cols)
 }
 
 // UpdateAll updates all rows with the specified column values, using an executor.
@@ -1083,6 +1173,11 @@ func (o GroupSlice) UpdateAll(exec boil.Executor, cols M) (int64, error) {
 		return 0, errors.Wrap(err, "models: unable to retrieve rows affected all in update all group")
 	}
 	return rowsAff, nil
+}
+
+// UpsertG attempts an insert, and does an update or ignore on conflict.
+func (o *Group) UpsertG(updateOnConflict bool, conflictColumns []string, updateColumns, insertColumns boil.Columns) error {
+	return o.Upsert(boil.GetDB(), updateOnConflict, conflictColumns, updateColumns, insertColumns)
 }
 
 // Upsert attempts an insert using an executor, and does an update or ignore on conflict.
@@ -1206,6 +1301,12 @@ func (o *Group) Upsert(exec boil.Executor, updateOnConflict bool, conflictColumn
 	return o.doAfterUpsertHooks(exec)
 }
 
+// DeleteG deletes a single Group record.
+// DeleteG will match against the primary key column to find the record to delete.
+func (o *Group) DeleteG() (int64, error) {
+	return o.Delete(boil.GetDB())
+}
+
 // Delete deletes a single Group record with an executor.
 // Delete will match against the primary key column to find the record to delete.
 func (o *Group) Delete(exec boil.Executor) (int64, error) {
@@ -1241,6 +1342,10 @@ func (o *Group) Delete(exec boil.Executor) (int64, error) {
 	return rowsAff, nil
 }
 
+func (q groupQuery) DeleteAllG() (int64, error) {
+	return q.DeleteAll(boil.GetDB())
+}
+
 // DeleteAll deletes all matching rows.
 func (q groupQuery) DeleteAll(exec boil.Executor) (int64, error) {
 	if q.Query == nil {
@@ -1260,6 +1365,11 @@ func (q groupQuery) DeleteAll(exec boil.Executor) (int64, error) {
 	}
 
 	return rowsAff, nil
+}
+
+// DeleteAllG deletes all rows in the slice.
+func (o GroupSlice) DeleteAllG() (int64, error) {
+	return o.DeleteAll(boil.GetDB())
 }
 
 // DeleteAll deletes all rows in the slice, using an executor.
@@ -1310,6 +1420,15 @@ func (o GroupSlice) DeleteAll(exec boil.Executor) (int64, error) {
 	return rowsAff, nil
 }
 
+// ReloadG refetches the object from the database using the primary keys.
+func (o *Group) ReloadG() error {
+	if o == nil {
+		return errors.New("models: no Group provided for reload")
+	}
+
+	return o.Reload(boil.GetDB())
+}
+
 // Reload refetches the object from the database
 // using the primary keys with an executor.
 func (o *Group) Reload(exec boil.Executor) error {
@@ -1320,6 +1439,16 @@ func (o *Group) Reload(exec boil.Executor) error {
 
 	*o = *ret
 	return nil
+}
+
+// ReloadAllG refetches every row with matching primary key column values
+// and overwrites the original object slice with the newly updated slice.
+func (o *GroupSlice) ReloadAllG() error {
+	if o == nil {
+		return errors.New("models: empty GroupSlice provided for reload all")
+	}
+
+	return o.ReloadAll(boil.GetDB())
 }
 
 // ReloadAll refetches every row with matching primary key column values
@@ -1349,6 +1478,11 @@ func (o *GroupSlice) ReloadAll(exec boil.Executor) error {
 	*o = slice
 
 	return nil
+}
+
+// GroupExistsG checks if the Group row exists.
+func GroupExistsG(iD int) (bool, error) {
+	return GroupExists(boil.GetDB(), iD)
 }
 
 // GroupExists checks if the Group row exists.

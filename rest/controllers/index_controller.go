@@ -7,15 +7,20 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	inertia "github.com/motephyr/fiber-inertia"
-	"github.com/motephyr/longcare/app"
 	"github.com/motephyr/longcare/models"
 	"github.com/motephyr/longcare/utils"
 	. "github.com/volatiletech/sqlboiler/v4/queries/qm"
 )
 
-func Index(c *fiber.Ctx) error {
-	today := time.Now().AddDate(0, 0, -700).Format("20060102")
-	olders, err := models.Olders(Load(models.OlderRels.Groups, Where("datestring > ?", today), OrderBy("datestring"))).All(app.Http.Database)
+type indexController struct{}
+
+var IndexController indexController
+
+func (indexController) Index(c *fiber.Ctx) error {
+
+	today := time.Now().AddDate(0, 0, -7).Format("20060102")
+	olders, err := models.Olders(Load(models.OlderRels.Groups, Where("datestring > ?", today), OrderBy("datestring"))).AllG()
+
 	if err != nil {
 		log.Println(err)
 	}
@@ -108,4 +113,64 @@ func Index(c *fiber.Ctx) error {
 	)
 	// return c.SendStatus(200)
 
+}
+
+func (indexController) Nurse(c *fiber.Ctx) error {
+	groupsquery, err := models.Groups(OrderBy("datestring")).AllG()
+	if err != nil {
+		log.Println(err)
+	}
+	datestrings := map[string]map[string]int{}
+	for _, x := range groupsquery {
+		obj := map[string]int{"time": 0, "longesttime": 0}
+		if datestrings[x.Datestring.String] != nil {
+			obj["time"] = datestrings[x.Datestring.String]["time"] + 1
+		} else {
+			obj["time"] = 1
+		}
+
+		duringtime, _ := strconv.Atoi(x.Duringtime.String)
+
+		if datestrings[x.Datestring.String] != nil {
+			if datestrings[x.Datestring.String]["longesttime"] > duringtime {
+				obj["longesttime"] = datestrings[x.Datestring.String]["longesttime"]
+			} else {
+				obj["longesttime"] = duringtime
+			}
+		} else {
+			obj["longesttime"] = duringtime
+		}
+
+		datestrings[x.Datestring.String] = obj
+
+	}
+
+	return inertia.Render(c,
+		"Nurse.vue", // Will render component named as Main
+		inertia.Map{
+			"datestrings": datestrings,
+		},
+	)
+}
+
+func (indexController) Manage(c *fiber.Ctx) error {
+	sourcesquery, err := models.Sources(OrderBy("datestring")).AllG()
+	if err != nil {
+		log.Println(err)
+	}
+	datestrings := map[string]int{}
+	for _, x := range sourcesquery {
+		obj := 1
+		if datestrings[x.Datestring.String] != 0 {
+			obj = datestrings[x.Datestring.String] + 1
+		}
+
+		datestrings[x.Datestring.String] = obj
+	}
+	return inertia.Render(c,
+		"Manage.vue", // Will render component named as Main
+		inertia.Map{
+			"datestrings": datestrings,
+		},
+	)
 }

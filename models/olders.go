@@ -310,6 +310,11 @@ func AddOlderHook(hookPoint boil.HookPoint, olderHook OlderHook) {
 	}
 }
 
+// OneG returns a single older record from the query using the global executor.
+func (q olderQuery) OneG() (*Older, error) {
+	return q.One(boil.GetDB())
+}
+
 // One returns a single older record from the query.
 func (q olderQuery) One(exec boil.Executor) (*Older, error) {
 	o := &Older{}
@@ -329,6 +334,11 @@ func (q olderQuery) One(exec boil.Executor) (*Older, error) {
 	}
 
 	return o, nil
+}
+
+// AllG returns all Older records from the query using the global executor.
+func (q olderQuery) AllG() (OlderSlice, error) {
+	return q.All(boil.GetDB())
 }
 
 // All returns all Older records from the query.
@@ -351,6 +361,11 @@ func (q olderQuery) All(exec boil.Executor) (OlderSlice, error) {
 	return o, nil
 }
 
+// CountG returns the count of all Older records in the query, and panics on error.
+func (q olderQuery) CountG() (int64, error) {
+	return q.Count(boil.GetDB())
+}
+
 // Count returns the count of all Older records in the query.
 func (q olderQuery) Count(exec boil.Executor) (int64, error) {
 	var count int64
@@ -364,6 +379,11 @@ func (q olderQuery) Count(exec boil.Executor) (int64, error) {
 	}
 
 	return count, nil
+}
+
+// ExistsG checks if the row exists in the table, and panics on error.
+func (q olderQuery) ExistsG() (bool, error) {
+	return q.Exists(boil.GetDB())
 }
 
 // Exists checks if the row exists in the table.
@@ -501,6 +521,15 @@ func (olderL) LoadGroups(e boil.Executor, singular bool, maybeOlder interface{},
 	return nil
 }
 
+// AddGroupsG adds the given related objects to the existing relationships
+// of the older, optionally inserting them as new records.
+// Appends related to o.R.Groups.
+// Sets related.R.Older appropriately.
+// Uses the global database handle.
+func (o *Older) AddGroupsG(insert bool, related ...*Group) error {
+	return o.AddGroups(boil.GetDB(), insert, related...)
+}
+
 // AddGroups adds the given related objects to the existing relationships
 // of the older, optionally inserting them as new records.
 // Appends related to o.R.Groups.
@@ -553,6 +582,17 @@ func (o *Older) AddGroups(exec boil.Executor, insert bool, related ...*Group) er
 	return nil
 }
 
+// SetGroupsG removes all previously related items of the
+// older replacing them completely with the passed
+// in related items, optionally inserting them as new records.
+// Sets o.R.Older's Groups accordingly.
+// Replaces o.R.Groups with related.
+// Sets related.R.Older's Groups accordingly.
+// Uses the global database handle.
+func (o *Older) SetGroupsG(insert bool, related ...*Group) error {
+	return o.SetGroups(boil.GetDB(), insert, related...)
+}
+
 // SetGroups removes all previously related items of the
 // older replacing them completely with the passed
 // in related items, optionally inserting them as new records.
@@ -584,6 +624,14 @@ func (o *Older) SetGroups(exec boil.Executor, insert bool, related ...*Group) er
 		o.R.Groups = nil
 	}
 	return o.AddGroups(exec, insert, related...)
+}
+
+// RemoveGroupsG relationships from objects passed in.
+// Removes related items from R.Groups (uses pointer comparison, removal does not keep order)
+// Sets related.R.Older.
+// Uses the global database handle.
+func (o *Older) RemoveGroupsG(related ...*Group) error {
+	return o.RemoveGroups(boil.GetDB(), related...)
 }
 
 // RemoveGroups relationships from objects passed in.
@@ -632,6 +680,11 @@ func Olders(mods ...qm.QueryMod) olderQuery {
 	return olderQuery{NewQuery(mods...)}
 }
 
+// FindOlderG retrieves a single record by ID.
+func FindOlderG(iD int, selectCols ...string) (*Older, error) {
+	return FindOlder(boil.GetDB(), iD, selectCols...)
+}
+
 // FindOlder retrieves a single record by ID with an executor.
 // If selectCols is empty Find will return all columns.
 func FindOlder(exec boil.Executor, iD int, selectCols ...string) (*Older, error) {
@@ -660,6 +713,11 @@ func FindOlder(exec boil.Executor, iD int, selectCols ...string) (*Older, error)
 	}
 
 	return olderObj, nil
+}
+
+// InsertG a single record. See Insert for whitelist behavior description.
+func (o *Older) InsertG(columns boil.Columns) error {
+	return o.Insert(boil.GetDB(), columns)
 }
 
 // Insert a single record using an executor.
@@ -748,6 +806,12 @@ func (o *Older) Insert(exec boil.Executor, columns boil.Columns) error {
 	return o.doAfterInsertHooks(exec)
 }
 
+// UpdateG a single Older record using the global executor.
+// See Update for more documentation.
+func (o *Older) UpdateG(columns boil.Columns) (int64, error) {
+	return o.Update(boil.GetDB(), columns)
+}
+
 // Update uses an executor to update the Older.
 // See boil.Columns.UpdateColumnSet documentation to understand column list inference for updates.
 // Update does not automatically update the record in case of default values. Use .Reload() to refresh the records.
@@ -814,6 +878,11 @@ func (o *Older) Update(exec boil.Executor, columns boil.Columns) (int64, error) 
 	return rowsAff, o.doAfterUpdateHooks(exec)
 }
 
+// UpdateAllG updates all rows with the specified column values.
+func (q olderQuery) UpdateAllG(cols M) (int64, error) {
+	return q.UpdateAll(boil.GetDB(), cols)
+}
+
 // UpdateAll updates all rows with the specified column values.
 func (q olderQuery) UpdateAll(exec boil.Executor, cols M) (int64, error) {
 	queries.SetUpdate(q.Query, cols)
@@ -829,6 +898,11 @@ func (q olderQuery) UpdateAll(exec boil.Executor, cols M) (int64, error) {
 	}
 
 	return rowsAff, nil
+}
+
+// UpdateAllG updates all rows with the specified column values.
+func (o OlderSlice) UpdateAllG(cols M) (int64, error) {
+	return o.UpdateAll(boil.GetDB(), cols)
 }
 
 // UpdateAll updates all rows with the specified column values, using an executor.
@@ -876,6 +950,11 @@ func (o OlderSlice) UpdateAll(exec boil.Executor, cols M) (int64, error) {
 		return 0, errors.Wrap(err, "models: unable to retrieve rows affected all in update all older")
 	}
 	return rowsAff, nil
+}
+
+// UpsertG attempts an insert, and does an update or ignore on conflict.
+func (o *Older) UpsertG(updateOnConflict bool, conflictColumns []string, updateColumns, insertColumns boil.Columns) error {
+	return o.Upsert(boil.GetDB(), updateOnConflict, conflictColumns, updateColumns, insertColumns)
 }
 
 // Upsert attempts an insert using an executor, and does an update or ignore on conflict.
@@ -999,6 +1078,12 @@ func (o *Older) Upsert(exec boil.Executor, updateOnConflict bool, conflictColumn
 	return o.doAfterUpsertHooks(exec)
 }
 
+// DeleteG deletes a single Older record.
+// DeleteG will match against the primary key column to find the record to delete.
+func (o *Older) DeleteG() (int64, error) {
+	return o.Delete(boil.GetDB())
+}
+
 // Delete deletes a single Older record with an executor.
 // Delete will match against the primary key column to find the record to delete.
 func (o *Older) Delete(exec boil.Executor) (int64, error) {
@@ -1034,6 +1119,10 @@ func (o *Older) Delete(exec boil.Executor) (int64, error) {
 	return rowsAff, nil
 }
 
+func (q olderQuery) DeleteAllG() (int64, error) {
+	return q.DeleteAll(boil.GetDB())
+}
+
 // DeleteAll deletes all matching rows.
 func (q olderQuery) DeleteAll(exec boil.Executor) (int64, error) {
 	if q.Query == nil {
@@ -1053,6 +1142,11 @@ func (q olderQuery) DeleteAll(exec boil.Executor) (int64, error) {
 	}
 
 	return rowsAff, nil
+}
+
+// DeleteAllG deletes all rows in the slice.
+func (o OlderSlice) DeleteAllG() (int64, error) {
+	return o.DeleteAll(boil.GetDB())
 }
 
 // DeleteAll deletes all rows in the slice, using an executor.
@@ -1103,6 +1197,15 @@ func (o OlderSlice) DeleteAll(exec boil.Executor) (int64, error) {
 	return rowsAff, nil
 }
 
+// ReloadG refetches the object from the database using the primary keys.
+func (o *Older) ReloadG() error {
+	if o == nil {
+		return errors.New("models: no Older provided for reload")
+	}
+
+	return o.Reload(boil.GetDB())
+}
+
 // Reload refetches the object from the database
 // using the primary keys with an executor.
 func (o *Older) Reload(exec boil.Executor) error {
@@ -1113,6 +1216,16 @@ func (o *Older) Reload(exec boil.Executor) error {
 
 	*o = *ret
 	return nil
+}
+
+// ReloadAllG refetches every row with matching primary key column values
+// and overwrites the original object slice with the newly updated slice.
+func (o *OlderSlice) ReloadAllG() error {
+	if o == nil {
+		return errors.New("models: empty OlderSlice provided for reload all")
+	}
+
+	return o.ReloadAll(boil.GetDB())
 }
 
 // ReloadAll refetches every row with matching primary key column values
@@ -1142,6 +1255,11 @@ func (o *OlderSlice) ReloadAll(exec boil.Executor) error {
 	*o = slice
 
 	return nil
+}
+
+// OlderExistsG checks if the Older row exists.
+func OlderExistsG(iD int) (bool, error) {
+	return OlderExists(boil.GetDB(), iD)
 }
 
 // OlderExists checks if the Older row exists.

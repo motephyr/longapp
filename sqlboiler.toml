@@ -1,6 +1,7 @@
 wipe     = true
 add-enum-types = true
 no-context = true
+add-global-variants = true
 
 [psql]
   dbname = "happiness"

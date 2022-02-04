@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	_ "github.com/lib/pq"
+	"github.com/volatiletech/sqlboiler/v4/boil"
 )
 
 type DatabaseDriver struct {
@@ -49,7 +50,7 @@ func (d *DatabaseConfig) Setup() error {
 		fmt.Println(d.Default)
 		panic(err)
 	}
-	// boil.SetDB(d.DB)
+	boil.SetDB(d.DB)
 
 	// d.DB.Use(
 	// 	dbresolver.Register(dbresolver.Config{}).

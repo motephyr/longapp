@@ -13,7 +13,7 @@
       "
     >
       <div class="relative flex flex-col md:flex-row">
-        <Link
+        <a
           href="/"
           class="
             flex
@@ -26,7 +26,7 @@
           "
         >
           <img :src="logo" width="200px" />
-        </Link>
+        </a>
 
         <nav
           class="
@@ -37,12 +37,12 @@
             md:mb-0 md:pl-8 md:ml-8 md:border-l md:border-gray-200
           "
         >
-          <Link
+          <a
             href="/list"
             class="mr-5 font-medium leading-6 text-gray-600 hover:text-gray-900"
           >
             首頁
-          </Link>
+          </a>
         </nav>
         <nav
           class="
@@ -53,12 +53,12 @@
             md:mb-0 md:pl-8 md:ml-8 md:border-l md:border-gray-200
           "
         >
-          <Link
+          <a
             href="/nurse"
             class="mr-5 font-medium leading-6 text-gray-600 hover:text-gray-900"
           >
             事件分類
-          </Link>
+          </a>
         </nav>
         <nav
           class="
