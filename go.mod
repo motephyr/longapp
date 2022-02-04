@@ -100,10 +100,6 @@ require (
 	github.com/lib/pq v1.10.4
 	github.com/volatiletech/null/v8 v8.1.2
 	github.com/volatiletech/randomize v0.0.1
-	github.com/volatiletech/sqlboiler v3.7.1+incompatible
 )
 
-require (
-	github.com/ericlagergren/decimal v0.0.0-20181231230500-73749d4874d5 // indirect
-	github.com/gofrs/uuid v4.0.0+incompatible // indirect
-)
+require github.com/gofrs/uuid v4.0.0+incompatible // indirect

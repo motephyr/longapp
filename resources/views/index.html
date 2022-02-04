@@ -1,4 +1,4 @@
-{{ $pageJson := sjsonSet .Page "." ""}}
+<!-- {{ $pageJson := sjsonSet .Page "." ""}} -->
 <!DOCTYPE html>
 <html>
 
@@ -13,9 +13,9 @@
     <div id="app" data-page="{{ .Page }}"></div>
     {{asset "/js/app.js"}}
     
-    {{ .Page }}<br />
+    <!-- {{ .Page }}<br />
     {{ index (unmarshal .Page) "props" }}<br>
-    {{ gjsonGet $pageJson "props"}}<br>
+    {{ gjsonGet $pageJson "props"}}<br> -->
 </body>
 
 </html>
