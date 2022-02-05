@@ -97,15 +97,18 @@ func StructToMap(obj any) map[string]any {
 
 	var data = make(map[string]interface{})
 	for i := 0; i < obj1.NumField(); i++ {
-		data[ToSnakeCase(obj1.Field(i).Name)] = obj2.Field(i).Interface()
+		name := ToSnakeCase(obj1.Field(i).Name)
+		value := obj2.Field(i).Interface()
+		data[name] = value
 	}
 	return data
 }
 
-func SliceStructToSliceMap[T any](objs []T) []any {
+func SliceStructToSliceMap[T any](objs []*T) []any {
+
 	var data []any
 	for _, obj := range objs {
-		data = append(data, StructToMap(obj))
+		data = append(data, StructToMap(*obj))
 	}
 	return data
 }
