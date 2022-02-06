@@ -69,7 +69,7 @@ import Layout from "../../Layout/Master";
 
 export default {
   layout: Layout,
-  async mounted() {
+  async created() {
       this.myData = this.sources.map((x) => {
         const date = new Date(Number(x.timestring) * 1000);
         const hours = "0" + date.getHours();

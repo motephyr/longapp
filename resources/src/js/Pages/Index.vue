@@ -20,7 +20,7 @@
           >
             <div class="flex flex-row items-center">
               <div class="flex-shrink pr-4">
-                <div class="rounded-full p-5 bg-green-600">
+                <div class="rounded-full p-5">
                   <i class="fa fa-wallet fa-2x fa-inverse"></i>
                 </div>
               </div>
@@ -51,7 +51,7 @@
           >
             <div class="flex flex-row items-center">
               <div class="flex-shrink pr-4">
-                <div class="rounded-full p-5 bg-green-600">
+                <div class="rounded-full p-5">
                   <i class="fa fa-wallet fa-2x fa-inverse"></i>
                 </div>
               </div>
@@ -81,7 +81,7 @@
           >
             <div class="flex flex-row items-center">
               <div class="flex-shrink pr-4">
-                <div class="rounded-full p-5 bg-green-600">
+                <div class="rounded-full p-5">
                   <i class="fa fa-wallet fa-2x fa-inverse"></i>
                 </div>
               </div>
@@ -111,7 +111,7 @@
           >
             <div class="flex flex-row items-center">
               <div class="flex-shrink pr-4">
-                <div class="rounded-full p-5 bg-green-600">
+                <div class="rounded-full p-5">
                   <i class="fa fa-wallet fa-2x fa-inverse"></i>
                 </div>
               </div>

@@ -67,7 +67,7 @@ import Layout from "../../Layout/Master";
 
 export default {
   layout: Layout,
-  async mounted() {
+  async created() {
     this.myData = this.groups.map((y) => {
       y.sources = y.sources.map((x) => {
         const date = new Date(Number(x.timestring) * 1000);

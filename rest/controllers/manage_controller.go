@@ -25,7 +25,7 @@ func (manageController) Manage(c *fiber.Ctx) error {
 	}
 
 	return inertia.Render(c,
-		"nurse/Nurse.vue", // Will render component named as Main
+		"manage/Manage.vue", // Will render component named as Main
 		inertia.Map{
 			"datestring": datestring,
 			"sources":    sources,
@@ -67,4 +67,20 @@ func (manageController) CreateGroup(c *fiber.Ctx) error {
 
 	return c.JSON("ok")
 
+}
+
+func (manageController) ResetData(c *fiber.Ctx) error {
+	datestring := c.Params("datestring")
+	models.Sources(Where("datestring = ?", datestring)).UpdateAllG(models.M{"group_id": nil})
+	models.Groups(Where("datestring = ?", datestring)).DeleteAllG()
+
+	return c.JSON("ok")
+}
+
+func (manageController) DeleteData(c *fiber.Ctx) error {
+	datestring := c.Params("datestring")
+	models.Sources(Where("datestring = ?", datestring)).DeleteAllG()
+	models.Groups(Where("datestring = ?", datestring)).DeleteAllG()
+
+	return c.JSON("ok")
 }

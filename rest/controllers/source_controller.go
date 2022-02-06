@@ -15,8 +15,18 @@ type sourceController struct{}
 var SourceController sourceController
 
 func (sourceController) List(c *fiber.Ctx) error {
-	sources := modelhelper.SourceAll()
+	sources := modelhelper.Source.All()
 	return c.JSON(sources)
+}
+
+func (sourceController) Find(c *fiber.Ctx) error {
+
+	uid, _ := strconv.Atoi(c.Params("id"))
+
+	source := modelhelper.Source.Find(uid)
+	log.Println(source)
+
+	return c.JSON(source)
 }
 
 func (sourceController) Create(c *fiber.Ctx) error {
@@ -24,17 +34,7 @@ func (sourceController) Create(c *fiber.Ctx) error {
 	var sourceRequest models.Source
 	c.BodyParser(&sourceRequest)
 
-	source := modelhelper.SourceCreate(&sourceRequest)
-
-	return c.JSON(source)
-}
-
-func (sourceController) Find(c *fiber.Ctx) error {
-
-	uid, _ := strconv.Atoi(c.Params("id"))
-
-	source := modelhelper.SourceFind(uid)
-	log.Println(source)
+	source := modelhelper.Source.Create(&sourceRequest)
 
 	return c.JSON(source)
 }
@@ -44,7 +44,7 @@ func (sourceController) Update(c *fiber.Ctx) error {
 	var source models.Source
 	uid, _ := strconv.Atoi(c.Params("id"))
 	c.BodyParser(&source)
-	result := modelhelper.SourceUpdate(uid, &source)
+	result := modelhelper.Source.Update(uid, &source)
 	return c.JSON(result)
 }
 
@@ -52,7 +52,7 @@ func (sourceController) Delete(c *fiber.Ctx) error {
 	// Get model if exist
 	var source models.Source
 	uid, _ := strconv.Atoi(c.Params("id"))
-	result := modelhelper.SourceDelete(uid, &source)
+	result := modelhelper.Source.Delete(uid, &source)
 
 	return c.JSON(result)
 }

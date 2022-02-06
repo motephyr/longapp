@@ -19,7 +19,7 @@ var IndexController indexController
 func (indexController) Index(c *fiber.Ctx) error {
 
 	today := time.Now().AddDate(0, 0, -7).Format("20060102")
-	olders, err := models.Olders(Load(models.OlderRels.Groups, Where("datestring > ?", today), OrderBy("datestring"))).AllG()
+	olders, err := models.Olders(Load("Groups", Where("datestring > ?", today), OrderBy("datestring"))).AllG()
 
 	if err != nil {
 		log.Println(err)

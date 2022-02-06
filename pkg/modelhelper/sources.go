@@ -10,7 +10,11 @@ import (
 	. "github.com/volatiletech/sqlboiler/v4/queries/qm"
 )
 
-func SourceAll() models.SourceSlice {
+type source struct{}
+
+var Source source
+
+func (source) All() models.SourceSlice {
 	result, err := models.Sources().All(app.Http.Database)
 	if err != nil {
 		log.Println(err)
@@ -18,7 +22,7 @@ func SourceAll() models.SourceSlice {
 	return result
 }
 
-func SourceCreate(source *models.Source) *models.Source {
+func (source) Create(source *models.Source) *models.Source {
 	err := source.Insert(app.Http.Database, boil.Infer())
 	if err != nil {
 		log.Println(err)
@@ -26,7 +30,7 @@ func SourceCreate(source *models.Source) *models.Source {
 	return source
 }
 
-func SourceFind(id any) *models.Source {
+func (source) Find(id any) *models.Source {
 	result, err := models.Sources(Where("id = ?", id)).One(app.Http.Database)
 	if err != nil {
 		log.Println(err)
@@ -34,7 +38,7 @@ func SourceFind(id any) *models.Source {
 	return result
 }
 
-func SourceUpdate(id int, source *models.Source) *models.Source {
+func (source) Update(id int, source *models.Source) *models.Source {
 
 	source.ID = id
 	rowsAff, _ := source.Update(app.Http.Database, boil.Infer())
@@ -46,7 +50,7 @@ func SourceUpdate(id int, source *models.Source) *models.Source {
 	}
 }
 
-func SourceDelete(id int, source *models.Source) bool {
+func (source) Delete(id int, source *models.Source) bool {
 
 	source.ID = id
 
