@@ -17,6 +17,12 @@ func LoadRoutes(app *fiber.App) {
 	app.Get("/manage", controllers.IndexController.Manage)
 
 	app.Get("/nurse/:datestring", controllers.NurseController.Nurse)
+	app.Post("/nurse/:datestring/groups/:group_id", controllers.NurseController.SetOlderId)
+
+	app.Get("/manage/:datestring", controllers.ManageController.Manage)
+	// app.Post("/manage/:datestring/createGroup", controllers.ManageController.CreateGroup)
+	// app.Post("/manage/:datestring/resetData", controllers.ManageController.resetData)
+	// app.Post("/manage/:datestring/deleteData", controllers.ManageController.deleteData)
 
 	sources := app.Group("sources")
 	sources.Get("/", controllers.SourceController.List)

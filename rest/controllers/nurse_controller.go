@@ -2,11 +2,14 @@ package controllers
 
 import (
 	"log"
+	"strconv"
 
 	"github.com/gofiber/fiber/v2"
 	inertia "github.com/motephyr/fiber-inertia"
 	"github.com/motephyr/longcare/models"
 	"github.com/motephyr/longcare/utils"
+	"github.com/volatiletech/null/v8"
+	"github.com/volatiletech/sqlboiler/v4/boil"
 	. "github.com/volatiletech/sqlboiler/v4/queries/qm"
 )
 
@@ -40,5 +43,21 @@ func (nurseController) Nurse(c *fiber.Ctx) error {
 		},
 	)
 	// return c.SendStatus(200)
+
+}
+
+func (nurseController) SetOlderId(c *fiber.Ctx) error {
+	older_id, _ := strconv.Atoi(c.Params("older_id"))
+	group_id, _ := strconv.Atoi(c.Params("group_id"))
+	group, err := models.Groups(Where("id = ?", group_id)).OneG()
+	if err != nil {
+		log.Println(err)
+	}
+	group.OlderID = null.IntFrom(older_id)
+	_, err = group.UpdateG(boil.Infer())
+	if err != nil {
+		log.Println(err)
+	}
+	return c.JSON("ok")
 
 }
