@@ -26,9 +26,18 @@ func LoadRoutes(app *fiber.App) {
 
 	sources := app.Group("sources")
 	sources.Get("/", controllers.SourceController.List)
-	sources.Post("/", controllers.SourceController.Create)
 	sources.Get("/:id", controllers.SourceController.Find)
+	sources.Post("/", controllers.SourceController.Create)
 	sources.Put("/:id", controllers.SourceController.Update)
 	sources.Delete("/:id", controllers.SourceController.Delete)
+
+	olders := app.Group("olders")
+	olders.Get("/", controllers.OlderController.Index)
+	olders.Get("/new", controllers.OlderController.New)
+	olders.Get("/:id/edit", controllers.OlderController.Edit)
+	olders.Get("/:id", controllers.OlderController.Show)
+	olders.Post("/", controllers.OlderController.Create)
+	olders.Post("/:id", controllers.OlderController.Update)
+	olders.Delete("/:id", controllers.OlderController.Delete)
 
 }
