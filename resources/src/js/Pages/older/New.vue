@@ -191,7 +191,7 @@
 </template>
 
 <script>
-import Layout from "../../Layout/Master";
+import Layout from "@/js/Layout/Master";
 
 export default {
   layout: Layout,

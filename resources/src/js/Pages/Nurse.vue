@@ -34,9 +34,9 @@
 </template>
 
 <script>
-import Layout from "../Layout/Master";
+import Layout from "@/js/Layout/Master";
 import { Head } from "@inertiajs/inertia-vue";
-import helper from "../../js/helpers";
+import helper from "@/js/helpers";
 
 export default {
   layout: Layout,

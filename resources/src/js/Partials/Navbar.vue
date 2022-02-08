@@ -108,8 +108,8 @@
 
 <script>
 import { Link } from '@inertiajs/inertia-vue'
-import helper from '../../js/helpers'
-import logo from '../../img/logo.png'
+import helper from '@/js/helpers'
+import logo from '@/img/logo.png'
 export default {
   components: {
     Link,

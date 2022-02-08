@@ -1,5 +1,5 @@
 let mix = require('laravel-mix');
-
+let path = require('path')
 /*
  |--------------------------------------------------------------------------
  | Mix Asset Management
@@ -10,6 +10,9 @@ let mix = require('laravel-mix');
  | file for your application, as well as bundling up your JS files.
  |
  */
+mix.alias({
+    '@': path.join(__dirname, '/resources/src')
+});
 
 mix.js("resources/src/js/app.js", "js")
     .postCss("resources/src/css/app.css", "css",[

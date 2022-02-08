@@ -30,8 +30,8 @@
   </main>
 </template>
 <script>
-import Layout from "../Layout/Master";
-import helper from "../../js/helpers";
+import Layout from "@/js/Layout/Master";
+import helper from "@/js/helpers";
 
 export default {
   layout: Layout,

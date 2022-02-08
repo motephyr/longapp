@@ -150,7 +150,7 @@
 </template>
 
 <script>
-import Layout from '../Layout/Master'
+import Layout from '@/js/Layout/Master'
 import { Head } from '@inertiajs/inertia-vue'
 import VueApexCharts from 'vue-apexcharts'
 

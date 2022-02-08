@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import Navbar from '../Partials/Navbar'
+import Navbar from '@/js/Partials/Navbar'
 
 export default {
   components: {

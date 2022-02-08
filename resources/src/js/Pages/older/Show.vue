@@ -158,9 +158,9 @@
 </template>
 
 <script>
-import Layout from "../../Layout/Master";
+import Layout from "@/js/Layout/Master";
 
-import helper from "../../../js/helpers";
+import helper from "@/js/helpers";
 import VueApexCharts from 'vue-apexcharts'
 
 export default {
