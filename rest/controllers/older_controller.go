@@ -104,7 +104,7 @@ func (olderController) Create(c *fiber.Ctx) error {
 
 	olderRequest.InsertG(boil.Infer())
 
-	return c.Redirect("/olders/" + string(olderRequest.ID))
+	return c.Redirect("/olders/" + strconv.Itoa(olderRequest.ID))
 
 }
 
@@ -115,7 +115,7 @@ func (olderController) Update(c *fiber.Ctx) error {
 	c.BodyParser(&older)
 	older.ID = uid
 	older.UpdateG(boil.Infer())
-	return c.Redirect("/olders/" + string(older.ID))
+	return c.Redirect("/olders/" + strconv.Itoa(older.ID))
 }
 
 func (olderController) Delete(c *fiber.Ctx) error {

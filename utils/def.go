@@ -121,3 +121,10 @@ func Filter[T any](input []T, pred func(T) bool) (output []T) {
 	}
 	return output
 }
+
+func Abs(x int) int {
+	if x < 0 {
+		return -x
+	}
+	return x
+}

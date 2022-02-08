@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"log"
 	"strconv"
 
 	"github.com/motephyr/longcare/models"
@@ -24,7 +23,6 @@ func (sourceController) Find(c *fiber.Ctx) error {
 	uid, _ := strconv.Atoi(c.Params("id"))
 
 	source := modelhelper.Source.Find(uid)
-	log.Println(source)
 
 	return c.JSON(source)
 }

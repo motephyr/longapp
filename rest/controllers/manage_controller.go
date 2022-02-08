@@ -2,12 +2,12 @@ package controllers
 
 import (
 	"log"
-	"math"
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
 	inertia "github.com/motephyr/fiber-inertia"
 	"github.com/motephyr/longcare/models"
+	"github.com/motephyr/longcare/utils"
 	"github.com/volatiletech/null/v8"
 	"github.com/volatiletech/sqlboiler/v4/boil"
 	. "github.com/volatiletech/sqlboiler/v4/queries/qm"
@@ -51,11 +51,11 @@ func (manageController) CreateGroup(c *fiber.Ctx) error {
 	a, _ := strconv.Atoi(source1.Timestring.String)
 	b, _ := strconv.Atoi(source2.Timestring.String)
 
-	duringtime := math.Abs(float64(a - b))
+	duringtime := utils.Abs(a - b)
 
 	var g models.Group
 	g.Remark = null.StringFrom(payload.Remark)
-	g.Duringtime = null.StringFrom(string(int(duringtime)))
+	g.Duringtime = null.StringFrom(strconv.Itoa(duringtime))
 	g.Datestring = null.StringFrom(datestring)
 
 	g.InsertG(boil.Infer())
