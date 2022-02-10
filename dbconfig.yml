@@ -1,0 +1,10 @@
+
+development:
+    dialect: postgres
+    datasource: host=${DB_HOST} port=${DB_PORT} user=${DB_USER} dbname=${DB_NAME} password=${DB_PASS} sslmode=disable
+    dir: migrations/
+
+production:
+    dialect: ${DB_DRIVER}
+    datasource: host=${DB_HOST} port=${DB_PORT} user=${DB_USER} dbname=${DB_NAME} password=${DB_PASS} sslmode=disable
+    dir: migrations/

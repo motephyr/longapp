@@ -6,7 +6,9 @@ import (
 	"reflect"
 	"strings"
 
+	"github.com/motephyr/longcare/app"
 	config2 "github.com/motephyr/longcare/config"
+	auth "github.com/motephyr/longcare/pkg/auth"
 	"github.com/sujit-baniya/log"
 
 	"github.com/form3tech-oss/jwt-go"
@@ -219,4 +221,15 @@ func jwtFromCookie(name string) func(c *fiber.Ctx) (string, error) {
 		}
 		return token, nil
 	}
+}
+
+func AuthWeb() func(*fiber.Ctx) error {
+	return Authenticate(AuthConfig{
+		SigningKey:  []byte(app.Http.Token.AppJwtSecret),
+		TokenLookup: "cookie:Verify-Rest-Token",
+		ErrorHandler: func(ctx *fiber.Ctx, err error) error {
+			auth.Logout(ctx)
+			return ctx.Redirect("/auth/login")
+		},
+	})
 }

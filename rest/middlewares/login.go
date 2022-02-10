@@ -2,6 +2,11 @@ package middlewares
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/gookit/validate"
+	inertia "github.com/motephyr/fiber-inertia"
+	"github.com/motephyr/longcare/models"
+
+	auth "github.com/motephyr/longcare/pkg/auth"
 )
 
 func RedirectToHomePageOnLogin(c *fiber.Ctx) error {
@@ -12,25 +17,36 @@ func RedirectToHomePageOnLogin(c *fiber.Ctx) error {
 }
 
 func ValidateLoginPost(c *fiber.Ctx) error {
-	// var login models.Login
-	// if err := c.BodyParser(&login); err != nil {
-	// 	return app.Http.Flash.WithError(c, fiber.Map{
-	// 		"message": err.Error(),
-	// 	}).Redirect("/login")
-	// }
-	// v := validate.Struct(login)
-	// if !v.Validate() {
-	// 	return app.Http.Flash.WithError(c, fiber.Map{
-	// 		"message": v.Errors.One(),
-	// 	}).Redirect("/login")
-	// }
-	// user, err := login.CheckLogin() //nolint:wsl
+	var login models.User
+	if err := c.BodyParser(&login); err != nil {
+		inertia.Share(fiber.Map{
+			"flash": map[string]any{
+				"message": err.Error(),
+			},
+		})
+		return c.Redirect("/auth/login")
+	}
+	v := validate.Struct(login)
+	if !v.Validate() {
+		inertia.Share(fiber.Map{
+			"flash": map[string]any{
+				"message": v.Errors.One(),
+			},
+		})
+		return c.Redirect("/auth/login")
+	}
+	user, err := auth.CheckLogin(login) //nolint:wsl
 
-	// if err != nil {
-	// 	return app.Http.Flash.WithError(c, fiber.Map{
-	// 		"message": err.Error(),
-	// 	}).Redirect("/login")
-	// }
-	// c.Locals("user", user)
+	if err != nil {
+		inertia.Share(fiber.Map{
+			"flash": map[string]any{
+				"message": err.Error(),
+			},
+		})
+		return c.Redirect("/auth/login")
+	}
+
+	c.Locals("user", user)
+
 	return c.Next()
 }

@@ -16,7 +16,7 @@ type Token struct {
 }
 
 //CreateToken authenticates the user
-func (t *Token) CreateToken(c *fiber.Ctx, userID uint, secret string, expire ...int64) (*Token, error) {
+func (t *Token) CreateToken(c *fiber.Ctx, userID int, secret string, expire ...int64) (*Token, error) {
 	token := jwt.New(jwt.SigningMethodHS256)
 
 	claims := token.Claims.(jwt.MapClaims)
@@ -46,7 +46,7 @@ func (t *Token) CreateToken(c *fiber.Ctx, userID uint, secret string, expire ...
 }
 
 //ParseToken returns the users id or error
-func (t *Token) ParseToken(c *fiber.Ctx, secret string) (uint, error) {
+func (t *Token) ParseToken(c *fiber.Ctx, secret string) (int, error) {
 	tokenString := c.Cookies("Verify-Rest-Token")
 
 	if tokenString == "" {
@@ -69,7 +69,7 @@ func (t *Token) ParseToken(c *fiber.Ctx, secret string) (uint, error) {
 		return 0, err2
 	}
 
-	return uint(claims["id"].(float64)), nil
+	return int(claims["id"].(float64)), nil
 }
 
 //DeleteToken deletes the jwt token

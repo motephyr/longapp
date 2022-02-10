@@ -3,11 +3,11 @@ package middlewares
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gookit/validate"
-	"github.com/motephyr/longcare/pkg/models"
+	"github.com/motephyr/longcare/models"
 )
 
 func ValidateApiLoginPost(c *fiber.Ctx) error {
-	var login models.Login
+	var login models.User
 	if err := c.BodyParser(&login); err != nil {
 		return c.Status(401).JSON(fiber.Map{
 			"error":   true,

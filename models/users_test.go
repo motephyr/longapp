@@ -481,6 +481,331 @@ func testUsersInsertWhitelist(t *testing.T) {
 	}
 }
 
+func testUserToManyUserIdstrings(t *testing.T) {
+	var err error
+
+	tx := MustTx(boil.Begin())
+	defer func() { _ = tx.Rollback() }()
+
+	var a User
+	var b, c UserIdstring
+
+	seed := randomize.NewSeed()
+	if err = randomize.Struct(seed, &a, userDBTypes, true, userColumnsWithDefault...); err != nil {
+		t.Errorf("Unable to randomize User struct: %s", err)
+	}
+
+	if err := a.Insert(tx, boil.Infer()); err != nil {
+		t.Fatal(err)
+	}
+
+	if err = randomize.Struct(seed, &b, userIdstringDBTypes, false, userIdstringColumnsWithDefault...); err != nil {
+		t.Fatal(err)
+	}
+	if err = randomize.Struct(seed, &c, userIdstringDBTypes, false, userIdstringColumnsWithDefault...); err != nil {
+		t.Fatal(err)
+	}
+
+	queries.Assign(&b.UserID, a.ID)
+	queries.Assign(&c.UserID, a.ID)
+	if err = b.Insert(tx, boil.Infer()); err != nil {
+		t.Fatal(err)
+	}
+	if err = c.Insert(tx, boil.Infer()); err != nil {
+		t.Fatal(err)
+	}
+
+	check, err := a.UserIdstrings().All(tx)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	bFound, cFound := false, false
+	for _, v := range check {
+		if queries.Equal(v.UserID, b.UserID) {
+			bFound = true
+		}
+		if queries.Equal(v.UserID, c.UserID) {
+			cFound = true
+		}
+	}
+
+	if !bFound {
+		t.Error("expected to find b")
+	}
+	if !cFound {
+		t.Error("expected to find c")
+	}
+
+	slice := UserSlice{&a}
+	if err = a.L.LoadUserIdstrings(tx, false, (*[]*User)(&slice), nil); err != nil {
+		t.Fatal(err)
+	}
+	if got := len(a.R.UserIdstrings); got != 2 {
+		t.Error("number of eager loaded records wrong, got:", got)
+	}
+
+	a.R.UserIdstrings = nil
+	if err = a.L.LoadUserIdstrings(tx, true, &a, nil); err != nil {
+		t.Fatal(err)
+	}
+	if got := len(a.R.UserIdstrings); got != 2 {
+		t.Error("number of eager loaded records wrong, got:", got)
+	}
+
+	if t.Failed() {
+		t.Logf("%#v", check)
+	}
+}
+
+func testUserToManyAddOpUserIdstrings(t *testing.T) {
+	var err error
+
+	tx := MustTx(boil.Begin())
+	defer func() { _ = tx.Rollback() }()
+
+	var a User
+	var b, c, d, e UserIdstring
+
+	seed := randomize.NewSeed()
+	if err = randomize.Struct(seed, &a, userDBTypes, false, strmangle.SetComplement(userPrimaryKeyColumns, userColumnsWithoutDefault)...); err != nil {
+		t.Fatal(err)
+	}
+	foreigners := []*UserIdstring{&b, &c, &d, &e}
+	for _, x := range foreigners {
+		if err = randomize.Struct(seed, x, userIdstringDBTypes, false, strmangle.SetComplement(userIdstringPrimaryKeyColumns, userIdstringColumnsWithoutDefault)...); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	if err := a.Insert(tx, boil.Infer()); err != nil {
+		t.Fatal(err)
+	}
+	if err = b.Insert(tx, boil.Infer()); err != nil {
+		t.Fatal(err)
+	}
+	if err = c.Insert(tx, boil.Infer()); err != nil {
+		t.Fatal(err)
+	}
+
+	foreignersSplitByInsertion := [][]*UserIdstring{
+		{&b, &c},
+		{&d, &e},
+	}
+
+	for i, x := range foreignersSplitByInsertion {
+		err = a.AddUserIdstrings(tx, i != 0, x...)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		first := x[0]
+		second := x[1]
+
+		if !queries.Equal(a.ID, first.UserID) {
+			t.Error("foreign key was wrong value", a.ID, first.UserID)
+		}
+		if !queries.Equal(a.ID, second.UserID) {
+			t.Error("foreign key was wrong value", a.ID, second.UserID)
+		}
+
+		if first.R.User != &a {
+			t.Error("relationship was not added properly to the foreign slice")
+		}
+		if second.R.User != &a {
+			t.Error("relationship was not added properly to the foreign slice")
+		}
+
+		if a.R.UserIdstrings[i*2] != first {
+			t.Error("relationship struct slice not set to correct value")
+		}
+		if a.R.UserIdstrings[i*2+1] != second {
+			t.Error("relationship struct slice not set to correct value")
+		}
+
+		count, err := a.UserIdstrings().Count(tx)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if want := int64((i + 1) * 2); count != want {
+			t.Error("want", want, "got", count)
+		}
+	}
+}
+
+func testUserToManySetOpUserIdstrings(t *testing.T) {
+	var err error
+
+	tx := MustTx(boil.Begin())
+	defer func() { _ = tx.Rollback() }()
+
+	var a User
+	var b, c, d, e UserIdstring
+
+	seed := randomize.NewSeed()
+	if err = randomize.Struct(seed, &a, userDBTypes, false, strmangle.SetComplement(userPrimaryKeyColumns, userColumnsWithoutDefault)...); err != nil {
+		t.Fatal(err)
+	}
+	foreigners := []*UserIdstring{&b, &c, &d, &e}
+	for _, x := range foreigners {
+		if err = randomize.Struct(seed, x, userIdstringDBTypes, false, strmangle.SetComplement(userIdstringPrimaryKeyColumns, userIdstringColumnsWithoutDefault)...); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	if err = a.Insert(tx, boil.Infer()); err != nil {
+		t.Fatal(err)
+	}
+	if err = b.Insert(tx, boil.Infer()); err != nil {
+		t.Fatal(err)
+	}
+	if err = c.Insert(tx, boil.Infer()); err != nil {
+		t.Fatal(err)
+	}
+
+	err = a.SetUserIdstrings(tx, false, &b, &c)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	count, err := a.UserIdstrings().Count(tx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if count != 2 {
+		t.Error("count was wrong:", count)
+	}
+
+	err = a.SetUserIdstrings(tx, true, &d, &e)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	count, err = a.UserIdstrings().Count(tx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if count != 2 {
+		t.Error("count was wrong:", count)
+	}
+
+	if !queries.IsValuerNil(b.UserID) {
+		t.Error("want b's foreign key value to be nil")
+	}
+	if !queries.IsValuerNil(c.UserID) {
+		t.Error("want c's foreign key value to be nil")
+	}
+	if !queries.Equal(a.ID, d.UserID) {
+		t.Error("foreign key was wrong value", a.ID, d.UserID)
+	}
+	if !queries.Equal(a.ID, e.UserID) {
+		t.Error("foreign key was wrong value", a.ID, e.UserID)
+	}
+
+	if b.R.User != nil {
+		t.Error("relationship was not removed properly from the foreign struct")
+	}
+	if c.R.User != nil {
+		t.Error("relationship was not removed properly from the foreign struct")
+	}
+	if d.R.User != &a {
+		t.Error("relationship was not added properly to the foreign struct")
+	}
+	if e.R.User != &a {
+		t.Error("relationship was not added properly to the foreign struct")
+	}
+
+	if a.R.UserIdstrings[0] != &d {
+		t.Error("relationship struct slice not set to correct value")
+	}
+	if a.R.UserIdstrings[1] != &e {
+		t.Error("relationship struct slice not set to correct value")
+	}
+}
+
+func testUserToManyRemoveOpUserIdstrings(t *testing.T) {
+	var err error
+
+	tx := MustTx(boil.Begin())
+	defer func() { _ = tx.Rollback() }()
+
+	var a User
+	var b, c, d, e UserIdstring
+
+	seed := randomize.NewSeed()
+	if err = randomize.Struct(seed, &a, userDBTypes, false, strmangle.SetComplement(userPrimaryKeyColumns, userColumnsWithoutDefault)...); err != nil {
+		t.Fatal(err)
+	}
+	foreigners := []*UserIdstring{&b, &c, &d, &e}
+	for _, x := range foreigners {
+		if err = randomize.Struct(seed, x, userIdstringDBTypes, false, strmangle.SetComplement(userIdstringPrimaryKeyColumns, userIdstringColumnsWithoutDefault)...); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	if err := a.Insert(tx, boil.Infer()); err != nil {
+		t.Fatal(err)
+	}
+
+	err = a.AddUserIdstrings(tx, true, foreigners...)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	count, err := a.UserIdstrings().Count(tx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if count != 4 {
+		t.Error("count was wrong:", count)
+	}
+
+	err = a.RemoveUserIdstrings(tx, foreigners[:2]...)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	count, err = a.UserIdstrings().Count(tx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if count != 2 {
+		t.Error("count was wrong:", count)
+	}
+
+	if !queries.IsValuerNil(b.UserID) {
+		t.Error("want b's foreign key value to be nil")
+	}
+	if !queries.IsValuerNil(c.UserID) {
+		t.Error("want c's foreign key value to be nil")
+	}
+
+	if b.R.User != nil {
+		t.Error("relationship was not removed properly from the foreign struct")
+	}
+	if c.R.User != nil {
+		t.Error("relationship was not removed properly from the foreign struct")
+	}
+	if d.R.User != &a {
+		t.Error("relationship to a should have been preserved")
+	}
+	if e.R.User != &a {
+		t.Error("relationship to a should have been preserved")
+	}
+
+	if len(a.R.UserIdstrings) != 2 {
+		t.Error("should have preserved two relationships")
+	}
+
+	// Removal doesn't do a stable deletion for performance so we have to flip the order
+	if a.R.UserIdstrings[1] != &d {
+		t.Error("relationship to d should have been preserved")
+	}
+	if a.R.UserIdstrings[0] != &e {
+		t.Error("relationship to e should have been preserved")
+	}
+}
+
 func testUsersReload(t *testing.T) {
 	t.Parallel()
 
@@ -552,7 +877,7 @@ func testUsersSelect(t *testing.T) {
 }
 
 var (
-	userDBTypes = map[string]string{`ID`: `integer`, `Name`: `character varying`, `Username`: `character varying`, `Email`: `character varying`, `Password`: `character varying`, `ImageURL`: `character varying`, `CreatedAt`: `timestamp with time zone`, `UpdatedAt`: `timestamp with time zone`}
+	userDBTypes = map[string]string{`ID`: `integer`, `Username`: `character varying`, `Password`: `character varying`, `CreatedAt`: `timestamp with time zone`, `UpdatedAt`: `timestamp with time zone`}
 	_           = bytes.MinRead
 )
 

@@ -8,6 +8,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	inertia "github.com/motephyr/fiber-inertia"
 	"github.com/motephyr/longcare/models"
+	"github.com/motephyr/longcare/pkg/auth"
 	"github.com/motephyr/longcare/utils"
 	. "github.com/volatiletech/sqlboiler/v4/queries/qm"
 )
@@ -16,7 +17,11 @@ type indexController struct{}
 
 var IndexController indexController
 
-func (indexController) Index(c *fiber.Ctx) error {
+func (indexController) IndexPage(c *fiber.Ctx) error {
+	_, err := auth.User(c)
+	if err != nil {
+		return c.Redirect("/auth/login")
+	}
 
 	today := time.Now().AddDate(0, 0, -7).Format("20060102")
 	olders, err := models.Olders(Load("Groups", Where("datestring > ?", today), OrderBy("datestring"))).AllG()

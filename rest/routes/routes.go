@@ -3,6 +3,7 @@ package routes
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/motephyr/longcare/rest/controllers"
+	"github.com/motephyr/longcare/rest/middlewares"
 )
 
 func LoadRoutes(app *fiber.App) {
@@ -11,8 +12,25 @@ func LoadRoutes(app *fiber.App) {
 	// ApiRoutes(api)
 	// WebRoutes(web)
 
-	app.Get("/", controllers.IndexController.Index)
-	app.Get("/list", controllers.IndexController.Index)
+	users := app.Group("/manage/users")
+	users.Get("/", controllers.UserController.Index)
+	users.Get("/new", controllers.UserController.New)
+	users.Get("/:id/edit", controllers.UserController.Edit)
+	users.Get("/:id", controllers.UserController.Show)
+	users.Post("/", controllers.UserController.Create)
+	users.Post("/:id", controllers.UserController.Update)
+	users.Delete("/:id", controllers.UserController.Delete)
+
+	app.Get("/auth/login", controllers.AuthController.LoginPage)
+	app.Post("/auth/login",
+		middlewares.ValidateLoginPost, controllers.AuthController.Login)
+	app.Post("/auth/logout",
+		controllers.AuthController.Logout,
+	)
+	app.Use(middlewares.AuthWeb())
+
+	app.Get("/", controllers.IndexController.IndexPage)
+	app.Get("/list", controllers.IndexController.IndexPage)
 	app.Get("/nurse", controllers.IndexController.Nurse)
 	app.Get("/manage", controllers.IndexController.Manage)
 

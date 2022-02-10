@@ -4,15 +4,19 @@
 package models
 
 var TableNames = struct {
-	Events  string
-	Groups  string
-	Olders  string
-	Sources string
-	Users   string
+	Events         string
+	GorpMigrations string
+	Groups         string
+	Olders         string
+	Sources        string
+	UserIdstrings  string
+	Users          string
 }{
-	Events:  "events",
-	Groups:  "groups",
-	Olders:  "olders",
-	Sources: "sources",
-	Users:   "users",
+	Events:         "events",
+	GorpMigrations: "gorp_migrations",
+	Groups:         "groups",
+	Olders:         "olders",
+	Sources:        "sources",
+	UserIdstrings:  "user_idstrings",
+	Users:          "users",
 }

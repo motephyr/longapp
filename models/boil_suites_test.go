@@ -13,101 +13,127 @@ import "testing"
 // Separating the tests thusly grants avoidance of Postgres deadlocks.
 func TestParent(t *testing.T) {
 	t.Run("Events", testEvents)
+	t.Run("GorpMigrations", testGorpMigrations)
 	t.Run("Groups", testGroups)
 	t.Run("Olders", testOlders)
 	t.Run("Sources", testSources)
+	t.Run("UserIdstrings", testUserIdstrings)
 	t.Run("Users", testUsers)
 }
 
 func TestDelete(t *testing.T) {
 	t.Run("Events", testEventsDelete)
+	t.Run("GorpMigrations", testGorpMigrationsDelete)
 	t.Run("Groups", testGroupsDelete)
 	t.Run("Olders", testOldersDelete)
 	t.Run("Sources", testSourcesDelete)
+	t.Run("UserIdstrings", testUserIdstringsDelete)
 	t.Run("Users", testUsersDelete)
 }
 
 func TestQueryDeleteAll(t *testing.T) {
 	t.Run("Events", testEventsQueryDeleteAll)
+	t.Run("GorpMigrations", testGorpMigrationsQueryDeleteAll)
 	t.Run("Groups", testGroupsQueryDeleteAll)
 	t.Run("Olders", testOldersQueryDeleteAll)
 	t.Run("Sources", testSourcesQueryDeleteAll)
+	t.Run("UserIdstrings", testUserIdstringsQueryDeleteAll)
 	t.Run("Users", testUsersQueryDeleteAll)
 }
 
 func TestSliceDeleteAll(t *testing.T) {
 	t.Run("Events", testEventsSliceDeleteAll)
+	t.Run("GorpMigrations", testGorpMigrationsSliceDeleteAll)
 	t.Run("Groups", testGroupsSliceDeleteAll)
 	t.Run("Olders", testOldersSliceDeleteAll)
 	t.Run("Sources", testSourcesSliceDeleteAll)
+	t.Run("UserIdstrings", testUserIdstringsSliceDeleteAll)
 	t.Run("Users", testUsersSliceDeleteAll)
 }
 
 func TestExists(t *testing.T) {
 	t.Run("Events", testEventsExists)
+	t.Run("GorpMigrations", testGorpMigrationsExists)
 	t.Run("Groups", testGroupsExists)
 	t.Run("Olders", testOldersExists)
 	t.Run("Sources", testSourcesExists)
+	t.Run("UserIdstrings", testUserIdstringsExists)
 	t.Run("Users", testUsersExists)
 }
 
 func TestFind(t *testing.T) {
 	t.Run("Events", testEventsFind)
+	t.Run("GorpMigrations", testGorpMigrationsFind)
 	t.Run("Groups", testGroupsFind)
 	t.Run("Olders", testOldersFind)
 	t.Run("Sources", testSourcesFind)
+	t.Run("UserIdstrings", testUserIdstringsFind)
 	t.Run("Users", testUsersFind)
 }
 
 func TestBind(t *testing.T) {
 	t.Run("Events", testEventsBind)
+	t.Run("GorpMigrations", testGorpMigrationsBind)
 	t.Run("Groups", testGroupsBind)
 	t.Run("Olders", testOldersBind)
 	t.Run("Sources", testSourcesBind)
+	t.Run("UserIdstrings", testUserIdstringsBind)
 	t.Run("Users", testUsersBind)
 }
 
 func TestOne(t *testing.T) {
 	t.Run("Events", testEventsOne)
+	t.Run("GorpMigrations", testGorpMigrationsOne)
 	t.Run("Groups", testGroupsOne)
 	t.Run("Olders", testOldersOne)
 	t.Run("Sources", testSourcesOne)
+	t.Run("UserIdstrings", testUserIdstringsOne)
 	t.Run("Users", testUsersOne)
 }
 
 func TestAll(t *testing.T) {
 	t.Run("Events", testEventsAll)
+	t.Run("GorpMigrations", testGorpMigrationsAll)
 	t.Run("Groups", testGroupsAll)
 	t.Run("Olders", testOldersAll)
 	t.Run("Sources", testSourcesAll)
+	t.Run("UserIdstrings", testUserIdstringsAll)
 	t.Run("Users", testUsersAll)
 }
 
 func TestCount(t *testing.T) {
 	t.Run("Events", testEventsCount)
+	t.Run("GorpMigrations", testGorpMigrationsCount)
 	t.Run("Groups", testGroupsCount)
 	t.Run("Olders", testOldersCount)
 	t.Run("Sources", testSourcesCount)
+	t.Run("UserIdstrings", testUserIdstringsCount)
 	t.Run("Users", testUsersCount)
 }
 
 func TestHooks(t *testing.T) {
 	t.Run("Events", testEventsHooks)
+	t.Run("GorpMigrations", testGorpMigrationsHooks)
 	t.Run("Groups", testGroupsHooks)
 	t.Run("Olders", testOldersHooks)
 	t.Run("Sources", testSourcesHooks)
+	t.Run("UserIdstrings", testUserIdstringsHooks)
 	t.Run("Users", testUsersHooks)
 }
 
 func TestInsert(t *testing.T) {
 	t.Run("Events", testEventsInsert)
 	t.Run("Events", testEventsInsertWhitelist)
+	t.Run("GorpMigrations", testGorpMigrationsInsert)
+	t.Run("GorpMigrations", testGorpMigrationsInsertWhitelist)
 	t.Run("Groups", testGroupsInsert)
 	t.Run("Groups", testGroupsInsertWhitelist)
 	t.Run("Olders", testOldersInsert)
 	t.Run("Olders", testOldersInsertWhitelist)
 	t.Run("Sources", testSourcesInsert)
 	t.Run("Sources", testSourcesInsertWhitelist)
+	t.Run("UserIdstrings", testUserIdstringsInsert)
+	t.Run("UserIdstrings", testUserIdstringsInsertWhitelist)
 	t.Run("Users", testUsersInsert)
 	t.Run("Users", testUsersInsertWhitelist)
 }
@@ -117,6 +143,7 @@ func TestInsert(t *testing.T) {
 func TestToOne(t *testing.T) {
 	t.Run("GroupToOlderUsingOlder", testGroupToOneOlderUsingOlder)
 	t.Run("SourceToGroupUsingGroup", testSourceToOneGroupUsingGroup)
+	t.Run("UserIdstringToUserUsingUser", testUserIdstringToOneUserUsingUser)
 }
 
 // TestOneToOne tests cannot be run in parallel
@@ -128,6 +155,7 @@ func TestOneToOne(t *testing.T) {}
 func TestToMany(t *testing.T) {
 	t.Run("GroupToSources", testGroupToManySources)
 	t.Run("OlderToGroups", testOlderToManyGroups)
+	t.Run("UserToUserIdstrings", testUserToManyUserIdstrings)
 }
 
 // TestToOneSet tests cannot be run in parallel
@@ -135,6 +163,7 @@ func TestToMany(t *testing.T) {
 func TestToOneSet(t *testing.T) {
 	t.Run("GroupToOlderUsingGroups", testGroupToOneSetOpOlderUsingOlder)
 	t.Run("SourceToGroupUsingSources", testSourceToOneSetOpGroupUsingGroup)
+	t.Run("UserIdstringToUserUsingUserIdstrings", testUserIdstringToOneSetOpUserUsingUser)
 }
 
 // TestToOneRemove tests cannot be run in parallel
@@ -142,6 +171,7 @@ func TestToOneSet(t *testing.T) {
 func TestToOneRemove(t *testing.T) {
 	t.Run("GroupToOlderUsingGroups", testGroupToOneRemoveOpOlderUsingOlder)
 	t.Run("SourceToGroupUsingSources", testSourceToOneRemoveOpGroupUsingGroup)
+	t.Run("UserIdstringToUserUsingUserIdstrings", testUserIdstringToOneRemoveOpUserUsingUser)
 }
 
 // TestOneToOneSet tests cannot be run in parallel
@@ -157,6 +187,7 @@ func TestOneToOneRemove(t *testing.T) {}
 func TestToManyAdd(t *testing.T) {
 	t.Run("GroupToSources", testGroupToManyAddOpSources)
 	t.Run("OlderToGroups", testOlderToManyAddOpGroups)
+	t.Run("UserToUserIdstrings", testUserToManyAddOpUserIdstrings)
 }
 
 // TestToManySet tests cannot be run in parallel
@@ -164,6 +195,7 @@ func TestToManyAdd(t *testing.T) {
 func TestToManySet(t *testing.T) {
 	t.Run("GroupToSources", testGroupToManySetOpSources)
 	t.Run("OlderToGroups", testOlderToManySetOpGroups)
+	t.Run("UserToUserIdstrings", testUserToManySetOpUserIdstrings)
 }
 
 // TestToManyRemove tests cannot be run in parallel
@@ -171,44 +203,55 @@ func TestToManySet(t *testing.T) {
 func TestToManyRemove(t *testing.T) {
 	t.Run("GroupToSources", testGroupToManyRemoveOpSources)
 	t.Run("OlderToGroups", testOlderToManyRemoveOpGroups)
+	t.Run("UserToUserIdstrings", testUserToManyRemoveOpUserIdstrings)
 }
 
 func TestReload(t *testing.T) {
 	t.Run("Events", testEventsReload)
+	t.Run("GorpMigrations", testGorpMigrationsReload)
 	t.Run("Groups", testGroupsReload)
 	t.Run("Olders", testOldersReload)
 	t.Run("Sources", testSourcesReload)
+	t.Run("UserIdstrings", testUserIdstringsReload)
 	t.Run("Users", testUsersReload)
 }
 
 func TestReloadAll(t *testing.T) {
 	t.Run("Events", testEventsReloadAll)
+	t.Run("GorpMigrations", testGorpMigrationsReloadAll)
 	t.Run("Groups", testGroupsReloadAll)
 	t.Run("Olders", testOldersReloadAll)
 	t.Run("Sources", testSourcesReloadAll)
+	t.Run("UserIdstrings", testUserIdstringsReloadAll)
 	t.Run("Users", testUsersReloadAll)
 }
 
 func TestSelect(t *testing.T) {
 	t.Run("Events", testEventsSelect)
+	t.Run("GorpMigrations", testGorpMigrationsSelect)
 	t.Run("Groups", testGroupsSelect)
 	t.Run("Olders", testOldersSelect)
 	t.Run("Sources", testSourcesSelect)
+	t.Run("UserIdstrings", testUserIdstringsSelect)
 	t.Run("Users", testUsersSelect)
 }
 
 func TestUpdate(t *testing.T) {
 	t.Run("Events", testEventsUpdate)
+	t.Run("GorpMigrations", testGorpMigrationsUpdate)
 	t.Run("Groups", testGroupsUpdate)
 	t.Run("Olders", testOldersUpdate)
 	t.Run("Sources", testSourcesUpdate)
+	t.Run("UserIdstrings", testUserIdstringsUpdate)
 	t.Run("Users", testUsersUpdate)
 }
 
 func TestSliceUpdateAll(t *testing.T) {
 	t.Run("Events", testEventsSliceUpdateAll)
+	t.Run("GorpMigrations", testGorpMigrationsSliceUpdateAll)
 	t.Run("Groups", testGroupsSliceUpdateAll)
 	t.Run("Olders", testOldersSliceUpdateAll)
 	t.Run("Sources", testSourcesSliceUpdateAll)
+	t.Run("UserIdstrings", testUserIdstringsSliceUpdateAll)
 	t.Run("Users", testUsersSliceUpdateAll)
 }

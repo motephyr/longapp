@@ -93,6 +93,19 @@
           </a>
         </nav>
       </div>
+      <a
+        href="/auth/logout"
+        class="block px-4 py-2 hover:bg-gray-200"
+        onclick="event.preventDefault(); document.getElementById('logout-form-profile').submit();"
+      >
+        Logout
+      </a>
+      <form
+        id="logout-form-profile"
+        action="/auth/logout"
+        method="POST"
+        style="display: none"
+      ></form>
       {{ today() }}
       <!-- <div class="inline-flex items-center ml-5 space-x-6 lg:justify-end">
           <a href="#" class="text-base font-medium leading-6 text-gray-600 whitespace-no-wrap transition duration-150 ease-in-out hover:text-gray-900">
@@ -107,22 +120,22 @@
 </template>
 
 <script>
-import { Link } from '@inertiajs/inertia-vue'
-import helper from '@/js/helpers'
-import logo from '@/img/logo.png'
+import { Link } from "@inertiajs/inertia-vue";
+import helper from "@/js/helpers";
+import logo from "@/img/logo.png";
 export default {
   components: {
     Link,
   },
   data() {
-      return {
-          logo
-      }
+    return {
+      logo,
+    };
   },
   methods: {
     today() {
-      return helper.today()
+      return helper.today();
     },
   },
-}
+};
 </script>

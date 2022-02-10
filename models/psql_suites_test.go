@@ -8,11 +8,15 @@ import "testing"
 func TestUpsert(t *testing.T) {
 	t.Run("Events", testEventsUpsert)
 
+	t.Run("GorpMigrations", testGorpMigrationsUpsert)
+
 	t.Run("Groups", testGroupsUpsert)
 
 	t.Run("Olders", testOldersUpsert)
 
 	t.Run("Sources", testSourcesUpsert)
+
+	t.Run("UserIdstrings", testUserIdstringsUpsert)
 
 	t.Run("Users", testUsersUpsert)
 }
