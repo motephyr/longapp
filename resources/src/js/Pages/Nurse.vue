@@ -22,7 +22,7 @@
             </td>
             <td class="border-green-600">{{ datestrings[datestring].time }}</td>
             <td class="border-green-600">
-              {{ toHHMMSS(datestrings[datestring].longesttime) }}
+              {{ $helper.toHHMMSS(datestrings[datestring].longesttime) }}
             </td>
           </tr>
         </tbody>
@@ -35,19 +35,12 @@
 
 <script>
 import Layout from "@/js/Layout/Master";
-import { Head } from "@inertiajs/inertia-vue";
-import helper from "@/js/helpers";
 
 export default {
   layout: Layout,
 
   props: {
     datestrings: Object,
-  },
-  methods: {
-    toHHMMSS(time) {
-      return helper.toHHMMSS(time);
-    },
   },
 };
 </script>

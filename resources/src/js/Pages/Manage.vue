@@ -31,17 +31,11 @@
 </template>
 <script>
 import Layout from "@/js/Layout/Master";
-import helper from "@/js/helpers";
 
 export default {
   layout: Layout,
   props: {
     datestrings: Object,
-  },
-  methods: {
-    toHHMMSS(time) {
-      return helper.toHHMMSS(time);
-    },
   },
 };
 </script>

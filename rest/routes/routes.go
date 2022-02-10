@@ -16,15 +16,16 @@ func LoadRoutes(app *fiber.App) {
 	users.Get("/", controllers.UserController.Index)
 	users.Get("/new", controllers.UserController.New)
 	users.Get("/:id/edit", controllers.UserController.Edit)
+
+	users.Post("/", controllers.UserController.Create)
+	users.Post("/:id", controllers.UserController.Update)
+	users.Post("/:id/delete", controllers.UserController.Delete)
+
 	idstring := users.Group("/:id/idstrings")
 	idstring.Get("/", controllers.UserIdstringController.Index)
 	idstring.Get("/new", controllers.UserIdstringController.New)
 	idstring.Post("/", controllers.UserIdstringController.Create)
 	idstring.Post("/:idstring/delete", controllers.UserIdstringController.Delete)
-
-	users.Post("/", controllers.UserController.Create)
-	users.Post("/:id", controllers.UserController.Update)
-	users.Post("/:id/delete", controllers.UserController.Delete)
 
 	app.Get("/manage", controllers.IndexController.Manage)
 	app.Get("/manage/:datestring", controllers.ManageController.Manage)

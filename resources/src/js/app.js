@@ -2,6 +2,9 @@ import Vue from 'vue'
 
 import { createInertiaApp } from '@inertiajs/inertia-vue'
 import { InertiaProgress } from '@inertiajs/progress'
+import helper from "@/js/helpers";
+
+Vue.prototype.$helper = helper
 
 
 createInertiaApp({

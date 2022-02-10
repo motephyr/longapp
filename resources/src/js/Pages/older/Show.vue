@@ -28,7 +28,7 @@
                 <h1 class="older-title">注意事項:{{ older.notice }}</h1>
                 <h3 class="older-title">本日活動次數:{{ todaytimes }}</h3>
                 <h3 class="older-title">
-                  本日活動總時長:{{ toHHMMSS(todaysumtime) }}
+                  本日活動總時長:{{ $helper.toHHMMSS(todaysumtime) }}
                 </h3>
                 <a class="older-meta-small" :href="`/olders/${older.id}/edit`"
                   >修改</a
@@ -140,7 +140,7 @@
                       }}
                     </td>
                     <td class="border">
-                      {{ toHHMMSS(group.duringtime) }}
+                      {{ $helper.toHHMMSS(group.duringtime) }}
                     </td>
                     <td class="border">{{ group.remark }}</td>
                     <!-- {{new Date(parseInt(group.sources[0].timestring)*1000)}}
@@ -159,8 +159,6 @@
 
 <script>
 import Layout from "@/js/Layout/Master";
-
-import helper from "@/js/helpers";
 import VueApexCharts from 'vue-apexcharts'
 
 export default {
@@ -168,11 +166,6 @@ export default {
   components: {
     // Head,
     VueApexCharts
-  },
-  methods: {
-    toHHMMSS(time) {
-      return helper.toHHMMSS(time);
-    },
   },
   props: {
     older: Object,
