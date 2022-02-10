@@ -1,7 +1,7 @@
 <template>
   <main>
     <div class="grid-container w-full">
-      管理頁面
+      年長者頁面
       <a
         href="/olders/new"
         class="

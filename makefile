@@ -18,9 +18,6 @@ migrate-up:
 migrate-down:
 	$(MIGRATE) down 
 
-migrate:
-	$(MIGRATE) new $(filter-out $@,$(MAKECMDGOALS))
-
 redo:
 	@read -p  "Are you sure to reapply the last migration? [y/n]" -n 1 -r; \
 	if [[ $$REPLY =~ ^[Yy] ]]; \
