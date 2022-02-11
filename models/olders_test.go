@@ -558,6 +558,83 @@ func testOlderToManyGroups(t *testing.T) {
 	}
 }
 
+func testOlderToManyUserOlders(t *testing.T) {
+	var err error
+
+	tx := MustTx(boil.Begin())
+	defer func() { _ = tx.Rollback() }()
+
+	var a Older
+	var b, c UserOlder
+
+	seed := randomize.NewSeed()
+	if err = randomize.Struct(seed, &a, olderDBTypes, true, olderColumnsWithDefault...); err != nil {
+		t.Errorf("Unable to randomize Older struct: %s", err)
+	}
+
+	if err := a.Insert(tx, boil.Infer()); err != nil {
+		t.Fatal(err)
+	}
+
+	if err = randomize.Struct(seed, &b, userOlderDBTypes, false, userOlderColumnsWithDefault...); err != nil {
+		t.Fatal(err)
+	}
+	if err = randomize.Struct(seed, &c, userOlderDBTypes, false, userOlderColumnsWithDefault...); err != nil {
+		t.Fatal(err)
+	}
+
+	queries.Assign(&b.OlderID, a.ID)
+	queries.Assign(&c.OlderID, a.ID)
+	if err = b.Insert(tx, boil.Infer()); err != nil {
+		t.Fatal(err)
+	}
+	if err = c.Insert(tx, boil.Infer()); err != nil {
+		t.Fatal(err)
+	}
+
+	check, err := a.UserOlders().All(tx)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	bFound, cFound := false, false
+	for _, v := range check {
+		if queries.Equal(v.OlderID, b.OlderID) {
+			bFound = true
+		}
+		if queries.Equal(v.OlderID, c.OlderID) {
+			cFound = true
+		}
+	}
+
+	if !bFound {
+		t.Error("expected to find b")
+	}
+	if !cFound {
+		t.Error("expected to find c")
+	}
+
+	slice := OlderSlice{&a}
+	if err = a.L.LoadUserOlders(tx, false, (*[]*Older)(&slice), nil); err != nil {
+		t.Fatal(err)
+	}
+	if got := len(a.R.UserOlders); got != 2 {
+		t.Error("number of eager loaded records wrong, got:", got)
+	}
+
+	a.R.UserOlders = nil
+	if err = a.L.LoadUserOlders(tx, true, &a, nil); err != nil {
+		t.Fatal(err)
+	}
+	if got := len(a.R.UserOlders); got != 2 {
+		t.Error("number of eager loaded records wrong, got:", got)
+	}
+
+	if t.Failed() {
+		t.Logf("%#v", check)
+	}
+}
+
 func testOlderToManyAddOpGroups(t *testing.T) {
 	var err error
 
@@ -802,6 +879,254 @@ func testOlderToManyRemoveOpGroups(t *testing.T) {
 		t.Error("relationship to d should have been preserved")
 	}
 	if a.R.Groups[0] != &e {
+		t.Error("relationship to e should have been preserved")
+	}
+}
+
+func testOlderToManyAddOpUserOlders(t *testing.T) {
+	var err error
+
+	tx := MustTx(boil.Begin())
+	defer func() { _ = tx.Rollback() }()
+
+	var a Older
+	var b, c, d, e UserOlder
+
+	seed := randomize.NewSeed()
+	if err = randomize.Struct(seed, &a, olderDBTypes, false, strmangle.SetComplement(olderPrimaryKeyColumns, olderColumnsWithoutDefault)...); err != nil {
+		t.Fatal(err)
+	}
+	foreigners := []*UserOlder{&b, &c, &d, &e}
+	for _, x := range foreigners {
+		if err = randomize.Struct(seed, x, userOlderDBTypes, false, strmangle.SetComplement(userOlderPrimaryKeyColumns, userOlderColumnsWithoutDefault)...); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	if err := a.Insert(tx, boil.Infer()); err != nil {
+		t.Fatal(err)
+	}
+	if err = b.Insert(tx, boil.Infer()); err != nil {
+		t.Fatal(err)
+	}
+	if err = c.Insert(tx, boil.Infer()); err != nil {
+		t.Fatal(err)
+	}
+
+	foreignersSplitByInsertion := [][]*UserOlder{
+		{&b, &c},
+		{&d, &e},
+	}
+
+	for i, x := range foreignersSplitByInsertion {
+		err = a.AddUserOlders(tx, i != 0, x...)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		first := x[0]
+		second := x[1]
+
+		if !queries.Equal(a.ID, first.OlderID) {
+			t.Error("foreign key was wrong value", a.ID, first.OlderID)
+		}
+		if !queries.Equal(a.ID, second.OlderID) {
+			t.Error("foreign key was wrong value", a.ID, second.OlderID)
+		}
+
+		if first.R.Older != &a {
+			t.Error("relationship was not added properly to the foreign slice")
+		}
+		if second.R.Older != &a {
+			t.Error("relationship was not added properly to the foreign slice")
+		}
+
+		if a.R.UserOlders[i*2] != first {
+			t.Error("relationship struct slice not set to correct value")
+		}
+		if a.R.UserOlders[i*2+1] != second {
+			t.Error("relationship struct slice not set to correct value")
+		}
+
+		count, err := a.UserOlders().Count(tx)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if want := int64((i + 1) * 2); count != want {
+			t.Error("want", want, "got", count)
+		}
+	}
+}
+
+func testOlderToManySetOpUserOlders(t *testing.T) {
+	var err error
+
+	tx := MustTx(boil.Begin())
+	defer func() { _ = tx.Rollback() }()
+
+	var a Older
+	var b, c, d, e UserOlder
+
+	seed := randomize.NewSeed()
+	if err = randomize.Struct(seed, &a, olderDBTypes, false, strmangle.SetComplement(olderPrimaryKeyColumns, olderColumnsWithoutDefault)...); err != nil {
+		t.Fatal(err)
+	}
+	foreigners := []*UserOlder{&b, &c, &d, &e}
+	for _, x := range foreigners {
+		if err = randomize.Struct(seed, x, userOlderDBTypes, false, strmangle.SetComplement(userOlderPrimaryKeyColumns, userOlderColumnsWithoutDefault)...); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	if err = a.Insert(tx, boil.Infer()); err != nil {
+		t.Fatal(err)
+	}
+	if err = b.Insert(tx, boil.Infer()); err != nil {
+		t.Fatal(err)
+	}
+	if err = c.Insert(tx, boil.Infer()); err != nil {
+		t.Fatal(err)
+	}
+
+	err = a.SetUserOlders(tx, false, &b, &c)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	count, err := a.UserOlders().Count(tx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if count != 2 {
+		t.Error("count was wrong:", count)
+	}
+
+	err = a.SetUserOlders(tx, true, &d, &e)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	count, err = a.UserOlders().Count(tx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if count != 2 {
+		t.Error("count was wrong:", count)
+	}
+
+	if !queries.IsValuerNil(b.OlderID) {
+		t.Error("want b's foreign key value to be nil")
+	}
+	if !queries.IsValuerNil(c.OlderID) {
+		t.Error("want c's foreign key value to be nil")
+	}
+	if !queries.Equal(a.ID, d.OlderID) {
+		t.Error("foreign key was wrong value", a.ID, d.OlderID)
+	}
+	if !queries.Equal(a.ID, e.OlderID) {
+		t.Error("foreign key was wrong value", a.ID, e.OlderID)
+	}
+
+	if b.R.Older != nil {
+		t.Error("relationship was not removed properly from the foreign struct")
+	}
+	if c.R.Older != nil {
+		t.Error("relationship was not removed properly from the foreign struct")
+	}
+	if d.R.Older != &a {
+		t.Error("relationship was not added properly to the foreign struct")
+	}
+	if e.R.Older != &a {
+		t.Error("relationship was not added properly to the foreign struct")
+	}
+
+	if a.R.UserOlders[0] != &d {
+		t.Error("relationship struct slice not set to correct value")
+	}
+	if a.R.UserOlders[1] != &e {
+		t.Error("relationship struct slice not set to correct value")
+	}
+}
+
+func testOlderToManyRemoveOpUserOlders(t *testing.T) {
+	var err error
+
+	tx := MustTx(boil.Begin())
+	defer func() { _ = tx.Rollback() }()
+
+	var a Older
+	var b, c, d, e UserOlder
+
+	seed := randomize.NewSeed()
+	if err = randomize.Struct(seed, &a, olderDBTypes, false, strmangle.SetComplement(olderPrimaryKeyColumns, olderColumnsWithoutDefault)...); err != nil {
+		t.Fatal(err)
+	}
+	foreigners := []*UserOlder{&b, &c, &d, &e}
+	for _, x := range foreigners {
+		if err = randomize.Struct(seed, x, userOlderDBTypes, false, strmangle.SetComplement(userOlderPrimaryKeyColumns, userOlderColumnsWithoutDefault)...); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	if err := a.Insert(tx, boil.Infer()); err != nil {
+		t.Fatal(err)
+	}
+
+	err = a.AddUserOlders(tx, true, foreigners...)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	count, err := a.UserOlders().Count(tx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if count != 4 {
+		t.Error("count was wrong:", count)
+	}
+
+	err = a.RemoveUserOlders(tx, foreigners[:2]...)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	count, err = a.UserOlders().Count(tx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if count != 2 {
+		t.Error("count was wrong:", count)
+	}
+
+	if !queries.IsValuerNil(b.OlderID) {
+		t.Error("want b's foreign key value to be nil")
+	}
+	if !queries.IsValuerNil(c.OlderID) {
+		t.Error("want c's foreign key value to be nil")
+	}
+
+	if b.R.Older != nil {
+		t.Error("relationship was not removed properly from the foreign struct")
+	}
+	if c.R.Older != nil {
+		t.Error("relationship was not removed properly from the foreign struct")
+	}
+	if d.R.Older != &a {
+		t.Error("relationship to a should have been preserved")
+	}
+	if e.R.Older != &a {
+		t.Error("relationship to a should have been preserved")
+	}
+
+	if len(a.R.UserOlders) != 2 {
+		t.Error("should have preserved two relationships")
+	}
+
+	// Removal doesn't do a stable deletion for performance so we have to flip the order
+	if a.R.UserOlders[1] != &d {
+		t.Error("relationship to d should have been preserved")
+	}
+	if a.R.UserOlders[0] != &e {
 		t.Error("relationship to e should have been preserved")
 	}
 }

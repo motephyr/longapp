@@ -18,6 +18,7 @@ func TestParent(t *testing.T) {
 	t.Run("Olders", testOlders)
 	t.Run("Sources", testSources)
 	t.Run("UserIdstrings", testUserIdstrings)
+	t.Run("UserOlders", testUserOlders)
 	t.Run("Users", testUsers)
 }
 
@@ -28,6 +29,7 @@ func TestDelete(t *testing.T) {
 	t.Run("Olders", testOldersDelete)
 	t.Run("Sources", testSourcesDelete)
 	t.Run("UserIdstrings", testUserIdstringsDelete)
+	t.Run("UserOlders", testUserOldersDelete)
 	t.Run("Users", testUsersDelete)
 }
 
@@ -38,6 +40,7 @@ func TestQueryDeleteAll(t *testing.T) {
 	t.Run("Olders", testOldersQueryDeleteAll)
 	t.Run("Sources", testSourcesQueryDeleteAll)
 	t.Run("UserIdstrings", testUserIdstringsQueryDeleteAll)
+	t.Run("UserOlders", testUserOldersQueryDeleteAll)
 	t.Run("Users", testUsersQueryDeleteAll)
 }
 
@@ -48,6 +51,7 @@ func TestSliceDeleteAll(t *testing.T) {
 	t.Run("Olders", testOldersSliceDeleteAll)
 	t.Run("Sources", testSourcesSliceDeleteAll)
 	t.Run("UserIdstrings", testUserIdstringsSliceDeleteAll)
+	t.Run("UserOlders", testUserOldersSliceDeleteAll)
 	t.Run("Users", testUsersSliceDeleteAll)
 }
 
@@ -58,6 +62,7 @@ func TestExists(t *testing.T) {
 	t.Run("Olders", testOldersExists)
 	t.Run("Sources", testSourcesExists)
 	t.Run("UserIdstrings", testUserIdstringsExists)
+	t.Run("UserOlders", testUserOldersExists)
 	t.Run("Users", testUsersExists)
 }
 
@@ -68,6 +73,7 @@ func TestFind(t *testing.T) {
 	t.Run("Olders", testOldersFind)
 	t.Run("Sources", testSourcesFind)
 	t.Run("UserIdstrings", testUserIdstringsFind)
+	t.Run("UserOlders", testUserOldersFind)
 	t.Run("Users", testUsersFind)
 }
 
@@ -78,6 +84,7 @@ func TestBind(t *testing.T) {
 	t.Run("Olders", testOldersBind)
 	t.Run("Sources", testSourcesBind)
 	t.Run("UserIdstrings", testUserIdstringsBind)
+	t.Run("UserOlders", testUserOldersBind)
 	t.Run("Users", testUsersBind)
 }
 
@@ -88,6 +95,7 @@ func TestOne(t *testing.T) {
 	t.Run("Olders", testOldersOne)
 	t.Run("Sources", testSourcesOne)
 	t.Run("UserIdstrings", testUserIdstringsOne)
+	t.Run("UserOlders", testUserOldersOne)
 	t.Run("Users", testUsersOne)
 }
 
@@ -98,6 +106,7 @@ func TestAll(t *testing.T) {
 	t.Run("Olders", testOldersAll)
 	t.Run("Sources", testSourcesAll)
 	t.Run("UserIdstrings", testUserIdstringsAll)
+	t.Run("UserOlders", testUserOldersAll)
 	t.Run("Users", testUsersAll)
 }
 
@@ -108,6 +117,7 @@ func TestCount(t *testing.T) {
 	t.Run("Olders", testOldersCount)
 	t.Run("Sources", testSourcesCount)
 	t.Run("UserIdstrings", testUserIdstringsCount)
+	t.Run("UserOlders", testUserOldersCount)
 	t.Run("Users", testUsersCount)
 }
 
@@ -118,6 +128,7 @@ func TestHooks(t *testing.T) {
 	t.Run("Olders", testOldersHooks)
 	t.Run("Sources", testSourcesHooks)
 	t.Run("UserIdstrings", testUserIdstringsHooks)
+	t.Run("UserOlders", testUserOldersHooks)
 	t.Run("Users", testUsersHooks)
 }
 
@@ -134,6 +145,8 @@ func TestInsert(t *testing.T) {
 	t.Run("Sources", testSourcesInsertWhitelist)
 	t.Run("UserIdstrings", testUserIdstringsInsert)
 	t.Run("UserIdstrings", testUserIdstringsInsertWhitelist)
+	t.Run("UserOlders", testUserOldersInsert)
+	t.Run("UserOlders", testUserOldersInsertWhitelist)
 	t.Run("Users", testUsersInsert)
 	t.Run("Users", testUsersInsertWhitelist)
 }
@@ -144,6 +157,8 @@ func TestToOne(t *testing.T) {
 	t.Run("GroupToOlderUsingOlder", testGroupToOneOlderUsingOlder)
 	t.Run("SourceToGroupUsingGroup", testSourceToOneGroupUsingGroup)
 	t.Run("UserIdstringToUserUsingUser", testUserIdstringToOneUserUsingUser)
+	t.Run("UserOlderToOlderUsingOlder", testUserOlderToOneOlderUsingOlder)
+	t.Run("UserOlderToUserUsingUser", testUserOlderToOneUserUsingUser)
 }
 
 // TestOneToOne tests cannot be run in parallel
@@ -155,7 +170,9 @@ func TestOneToOne(t *testing.T) {}
 func TestToMany(t *testing.T) {
 	t.Run("GroupToSources", testGroupToManySources)
 	t.Run("OlderToGroups", testOlderToManyGroups)
+	t.Run("OlderToUserOlders", testOlderToManyUserOlders)
 	t.Run("UserToUserIdstrings", testUserToManyUserIdstrings)
+	t.Run("UserToUserOlders", testUserToManyUserOlders)
 }
 
 // TestToOneSet tests cannot be run in parallel
@@ -164,6 +181,8 @@ func TestToOneSet(t *testing.T) {
 	t.Run("GroupToOlderUsingGroups", testGroupToOneSetOpOlderUsingOlder)
 	t.Run("SourceToGroupUsingSources", testSourceToOneSetOpGroupUsingGroup)
 	t.Run("UserIdstringToUserUsingUserIdstrings", testUserIdstringToOneSetOpUserUsingUser)
+	t.Run("UserOlderToOlderUsingUserOlders", testUserOlderToOneSetOpOlderUsingOlder)
+	t.Run("UserOlderToUserUsingUserOlders", testUserOlderToOneSetOpUserUsingUser)
 }
 
 // TestToOneRemove tests cannot be run in parallel
@@ -172,6 +191,8 @@ func TestToOneRemove(t *testing.T) {
 	t.Run("GroupToOlderUsingGroups", testGroupToOneRemoveOpOlderUsingOlder)
 	t.Run("SourceToGroupUsingSources", testSourceToOneRemoveOpGroupUsingGroup)
 	t.Run("UserIdstringToUserUsingUserIdstrings", testUserIdstringToOneRemoveOpUserUsingUser)
+	t.Run("UserOlderToOlderUsingUserOlders", testUserOlderToOneRemoveOpOlderUsingOlder)
+	t.Run("UserOlderToUserUsingUserOlders", testUserOlderToOneRemoveOpUserUsingUser)
 }
 
 // TestOneToOneSet tests cannot be run in parallel
@@ -187,7 +208,9 @@ func TestOneToOneRemove(t *testing.T) {}
 func TestToManyAdd(t *testing.T) {
 	t.Run("GroupToSources", testGroupToManyAddOpSources)
 	t.Run("OlderToGroups", testOlderToManyAddOpGroups)
+	t.Run("OlderToUserOlders", testOlderToManyAddOpUserOlders)
 	t.Run("UserToUserIdstrings", testUserToManyAddOpUserIdstrings)
+	t.Run("UserToUserOlders", testUserToManyAddOpUserOlders)
 }
 
 // TestToManySet tests cannot be run in parallel
@@ -195,7 +218,9 @@ func TestToManyAdd(t *testing.T) {
 func TestToManySet(t *testing.T) {
 	t.Run("GroupToSources", testGroupToManySetOpSources)
 	t.Run("OlderToGroups", testOlderToManySetOpGroups)
+	t.Run("OlderToUserOlders", testOlderToManySetOpUserOlders)
 	t.Run("UserToUserIdstrings", testUserToManySetOpUserIdstrings)
+	t.Run("UserToUserOlders", testUserToManySetOpUserOlders)
 }
 
 // TestToManyRemove tests cannot be run in parallel
@@ -203,7 +228,9 @@ func TestToManySet(t *testing.T) {
 func TestToManyRemove(t *testing.T) {
 	t.Run("GroupToSources", testGroupToManyRemoveOpSources)
 	t.Run("OlderToGroups", testOlderToManyRemoveOpGroups)
+	t.Run("OlderToUserOlders", testOlderToManyRemoveOpUserOlders)
 	t.Run("UserToUserIdstrings", testUserToManyRemoveOpUserIdstrings)
+	t.Run("UserToUserOlders", testUserToManyRemoveOpUserOlders)
 }
 
 func TestReload(t *testing.T) {
@@ -213,6 +240,7 @@ func TestReload(t *testing.T) {
 	t.Run("Olders", testOldersReload)
 	t.Run("Sources", testSourcesReload)
 	t.Run("UserIdstrings", testUserIdstringsReload)
+	t.Run("UserOlders", testUserOldersReload)
 	t.Run("Users", testUsersReload)
 }
 
@@ -223,6 +251,7 @@ func TestReloadAll(t *testing.T) {
 	t.Run("Olders", testOldersReloadAll)
 	t.Run("Sources", testSourcesReloadAll)
 	t.Run("UserIdstrings", testUserIdstringsReloadAll)
+	t.Run("UserOlders", testUserOldersReloadAll)
 	t.Run("Users", testUsersReloadAll)
 }
 
@@ -233,6 +262,7 @@ func TestSelect(t *testing.T) {
 	t.Run("Olders", testOldersSelect)
 	t.Run("Sources", testSourcesSelect)
 	t.Run("UserIdstrings", testUserIdstringsSelect)
+	t.Run("UserOlders", testUserOldersSelect)
 	t.Run("Users", testUsersSelect)
 }
 
@@ -243,6 +273,7 @@ func TestUpdate(t *testing.T) {
 	t.Run("Olders", testOldersUpdate)
 	t.Run("Sources", testSourcesUpdate)
 	t.Run("UserIdstrings", testUserIdstringsUpdate)
+	t.Run("UserOlders", testUserOldersUpdate)
 	t.Run("Users", testUsersUpdate)
 }
 
@@ -253,5 +284,6 @@ func TestSliceUpdateAll(t *testing.T) {
 	t.Run("Olders", testOldersSliceUpdateAll)
 	t.Run("Sources", testSourcesSliceUpdateAll)
 	t.Run("UserIdstrings", testUserIdstringsSliceUpdateAll)
+	t.Run("UserOlders", testUserOldersSliceUpdateAll)
 	t.Run("Users", testUsersSliceUpdateAll)
 }

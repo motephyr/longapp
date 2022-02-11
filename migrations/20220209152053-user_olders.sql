@@ -8,7 +8,7 @@ CREATE TABLE public."user_olders" (
 	created_at timestamptz NULL,
 	updated_at timestamptz NULL,
 	CONSTRAINT user_olders_pkey PRIMARY KEY (id),
-	CONSTRAINT user_olders_user_id_foreign FOREIGN KEY (user_id) REFERENCES public.users(id)
+	CONSTRAINT user_olders_user_id_foreign FOREIGN KEY (user_id) REFERENCES public.users(id),
 	CONSTRAINT user_olders_older_id_foreign FOREIGN KEY (older_id) REFERENCES public.olders(id)
 
 );

@@ -114,14 +114,17 @@ var OlderWhere = struct {
 
 // OlderRels is where relationship names are stored.
 var OlderRels = struct {
-	Groups string
+	Groups     string
+	UserOlders string
 }{
-	Groups: "Groups",
+	Groups:     "Groups",
+	UserOlders: "UserOlders",
 }
 
 // olderR is where relationships are stored.
 type olderR struct {
-	Groups GroupSlice `boil:"Groups" json:"Groups" toml:"Groups" yaml:"Groups"`
+	Groups     GroupSlice     `boil:"Groups" json:"Groups" toml:"Groups" yaml:"Groups"`
+	UserOlders UserOlderSlice `boil:"UserOlders" json:"UserOlders" toml:"UserOlders" yaml:"UserOlders"`
 }
 
 // NewStruct creates a new relationship struct
@@ -423,6 +426,27 @@ func (o *Older) Groups(mods ...qm.QueryMod) groupQuery {
 	return query
 }
 
+// UserOlders retrieves all the user_older's UserOlders with an executor.
+func (o *Older) UserOlders(mods ...qm.QueryMod) userOlderQuery {
+	var queryMods []qm.QueryMod
+	if len(mods) != 0 {
+		queryMods = append(queryMods, mods...)
+	}
+
+	queryMods = append(queryMods,
+		qm.Where("\"user_olders\".\"older_id\"=?", o.ID),
+	)
+
+	query := UserOlders(queryMods...)
+	queries.SetFrom(query.Query, "\"user_olders\"")
+
+	if len(queries.GetSelect(query.Query)) == 0 {
+		queries.SetSelect(query.Query, []string{"\"user_olders\".*"})
+	}
+
+	return query
+}
+
 // LoadGroups allows an eager lookup of values, cached into the
 // loaded structs of the objects. This is for a 1-M or N-M relationship.
 func (olderL) LoadGroups(e boil.Executor, singular bool, maybeOlder interface{}, mods queries.Applicator) error {
@@ -511,6 +535,104 @@ func (olderL) LoadGroups(e boil.Executor, singular bool, maybeOlder interface{},
 				local.R.Groups = append(local.R.Groups, foreign)
 				if foreign.R == nil {
 					foreign.R = &groupR{}
+				}
+				foreign.R.Older = local
+				break
+			}
+		}
+	}
+
+	return nil
+}
+
+// LoadUserOlders allows an eager lookup of values, cached into the
+// loaded structs of the objects. This is for a 1-M or N-M relationship.
+func (olderL) LoadUserOlders(e boil.Executor, singular bool, maybeOlder interface{}, mods queries.Applicator) error {
+	var slice []*Older
+	var object *Older
+
+	if singular {
+		object = maybeOlder.(*Older)
+	} else {
+		slice = *maybeOlder.(*[]*Older)
+	}
+
+	args := make([]interface{}, 0, 1)
+	if singular {
+		if object.R == nil {
+			object.R = &olderR{}
+		}
+		args = append(args, object.ID)
+	} else {
+	Outer:
+		for _, obj := range slice {
+			if obj.R == nil {
+				obj.R = &olderR{}
+			}
+
+			for _, a := range args {
+				if queries.Equal(a, obj.ID) {
+					continue Outer
+				}
+			}
+
+			args = append(args, obj.ID)
+		}
+	}
+
+	if len(args) == 0 {
+		return nil
+	}
+
+	query := NewQuery(
+		qm.From(`user_olders`),
+		qm.WhereIn(`user_olders.older_id in ?`, args...),
+	)
+	if mods != nil {
+		mods.Apply(query)
+	}
+
+	results, err := query.Query(e)
+	if err != nil {
+		return errors.Wrap(err, "failed to eager load user_olders")
+	}
+
+	var resultSlice []*UserOlder
+	if err = queries.Bind(results, &resultSlice); err != nil {
+		return errors.Wrap(err, "failed to bind eager loaded slice user_olders")
+	}
+
+	if err = results.Close(); err != nil {
+		return errors.Wrap(err, "failed to close results in eager load on user_olders")
+	}
+	if err = results.Err(); err != nil {
+		return errors.Wrap(err, "error occurred during iteration of eager loaded relations for user_olders")
+	}
+
+	if len(userOlderAfterSelectHooks) != 0 {
+		for _, obj := range resultSlice {
+			if err := obj.doAfterSelectHooks(e); err != nil {
+				return err
+			}
+		}
+	}
+	if singular {
+		object.R.UserOlders = resultSlice
+		for _, foreign := range resultSlice {
+			if foreign.R == nil {
+				foreign.R = &userOlderR{}
+			}
+			foreign.R.Older = object
+		}
+		return nil
+	}
+
+	for _, foreign := range resultSlice {
+		for _, local := range slice {
+			if queries.Equal(local.ID, foreign.OlderID) {
+				local.R.UserOlders = append(local.R.UserOlders, foreign)
+				if foreign.R == nil {
+					foreign.R = &userOlderR{}
 				}
 				foreign.R.Older = local
 				break
@@ -667,6 +789,159 @@ func (o *Older) RemoveGroups(exec boil.Executor, related ...*Group) error {
 				o.R.Groups[i] = o.R.Groups[ln-1]
 			}
 			o.R.Groups = o.R.Groups[:ln-1]
+			break
+		}
+	}
+
+	return nil
+}
+
+// AddUserOldersG adds the given related objects to the existing relationships
+// of the older, optionally inserting them as new records.
+// Appends related to o.R.UserOlders.
+// Sets related.R.Older appropriately.
+// Uses the global database handle.
+func (o *Older) AddUserOldersG(insert bool, related ...*UserOlder) error {
+	return o.AddUserOlders(boil.GetDB(), insert, related...)
+}
+
+// AddUserOlders adds the given related objects to the existing relationships
+// of the older, optionally inserting them as new records.
+// Appends related to o.R.UserOlders.
+// Sets related.R.Older appropriately.
+func (o *Older) AddUserOlders(exec boil.Executor, insert bool, related ...*UserOlder) error {
+	var err error
+	for _, rel := range related {
+		if insert {
+			queries.Assign(&rel.OlderID, o.ID)
+			if err = rel.Insert(exec, boil.Infer()); err != nil {
+				return errors.Wrap(err, "failed to insert into foreign table")
+			}
+		} else {
+			updateQuery := fmt.Sprintf(
+				"UPDATE \"user_olders\" SET %s WHERE %s",
+				strmangle.SetParamNames("\"", "\"", 1, []string{"older_id"}),
+				strmangle.WhereClause("\"", "\"", 2, userOlderPrimaryKeyColumns),
+			)
+			values := []interface{}{o.ID, rel.ID}
+
+			if boil.DebugMode {
+				fmt.Fprintln(boil.DebugWriter, updateQuery)
+				fmt.Fprintln(boil.DebugWriter, values)
+			}
+			if _, err = exec.Exec(updateQuery, values...); err != nil {
+				return errors.Wrap(err, "failed to update foreign table")
+			}
+
+			queries.Assign(&rel.OlderID, o.ID)
+		}
+	}
+
+	if o.R == nil {
+		o.R = &olderR{
+			UserOlders: related,
+		}
+	} else {
+		o.R.UserOlders = append(o.R.UserOlders, related...)
+	}
+
+	for _, rel := range related {
+		if rel.R == nil {
+			rel.R = &userOlderR{
+				Older: o,
+			}
+		} else {
+			rel.R.Older = o
+		}
+	}
+	return nil
+}
+
+// SetUserOldersG removes all previously related items of the
+// older replacing them completely with the passed
+// in related items, optionally inserting them as new records.
+// Sets o.R.Older's UserOlders accordingly.
+// Replaces o.R.UserOlders with related.
+// Sets related.R.Older's UserOlders accordingly.
+// Uses the global database handle.
+func (o *Older) SetUserOldersG(insert bool, related ...*UserOlder) error {
+	return o.SetUserOlders(boil.GetDB(), insert, related...)
+}
+
+// SetUserOlders removes all previously related items of the
+// older replacing them completely with the passed
+// in related items, optionally inserting them as new records.
+// Sets o.R.Older's UserOlders accordingly.
+// Replaces o.R.UserOlders with related.
+// Sets related.R.Older's UserOlders accordingly.
+func (o *Older) SetUserOlders(exec boil.Executor, insert bool, related ...*UserOlder) error {
+	query := "update \"user_olders\" set \"older_id\" = null where \"older_id\" = $1"
+	values := []interface{}{o.ID}
+	if boil.DebugMode {
+		fmt.Fprintln(boil.DebugWriter, query)
+		fmt.Fprintln(boil.DebugWriter, values)
+	}
+	_, err := exec.Exec(query, values...)
+	if err != nil {
+		return errors.Wrap(err, "failed to remove relationships before set")
+	}
+
+	if o.R != nil {
+		for _, rel := range o.R.UserOlders {
+			queries.SetScanner(&rel.OlderID, nil)
+			if rel.R == nil {
+				continue
+			}
+
+			rel.R.Older = nil
+		}
+
+		o.R.UserOlders = nil
+	}
+	return o.AddUserOlders(exec, insert, related...)
+}
+
+// RemoveUserOldersG relationships from objects passed in.
+// Removes related items from R.UserOlders (uses pointer comparison, removal does not keep order)
+// Sets related.R.Older.
+// Uses the global database handle.
+func (o *Older) RemoveUserOldersG(related ...*UserOlder) error {
+	return o.RemoveUserOlders(boil.GetDB(), related...)
+}
+
+// RemoveUserOlders relationships from objects passed in.
+// Removes related items from R.UserOlders (uses pointer comparison, removal does not keep order)
+// Sets related.R.Older.
+func (o *Older) RemoveUserOlders(exec boil.Executor, related ...*UserOlder) error {
+	if len(related) == 0 {
+		return nil
+	}
+
+	var err error
+	for _, rel := range related {
+		queries.SetScanner(&rel.OlderID, nil)
+		if rel.R != nil {
+			rel.R.Older = nil
+		}
+		if _, err = rel.Update(exec, boil.Whitelist("older_id")); err != nil {
+			return err
+		}
+	}
+	if o.R == nil {
+		return nil
+	}
+
+	for _, rel := range related {
+		for i, ri := range o.R.UserOlders {
+			if rel != ri {
+				continue
+			}
+
+			ln := len(o.R.UserOlders)
+			if ln > 1 && i < ln-1 {
+				o.R.UserOlders[i] = o.R.UserOlders[ln-1]
+			}
+			o.R.UserOlders = o.R.UserOlders[:ln-1]
 			break
 		}
 	}

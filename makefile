@@ -14,9 +14,11 @@ migrate-status:
 
 migrate-up:
 	$(MIGRATE) up
+	sqlboiler psql --wipe
 
 migrate-down:
-	$(MIGRATE) down 
+	$(MIGRATE) down
+	sqlboiler psql --wipe
 
 redo:
 	@read -p  "Are you sure to reapply the last migration? [y/n]" -n 1 -r; \

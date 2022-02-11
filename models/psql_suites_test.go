@@ -18,5 +18,7 @@ func TestUpsert(t *testing.T) {
 
 	t.Run("UserIdstrings", testUserIdstringsUpsert)
 
+	t.Run("UserOlders", testUserOldersUpsert)
+
 	t.Run("Users", testUsersUpsert)
 }

@@ -10,6 +10,7 @@ var TableNames = struct {
 	Olders         string
 	Sources        string
 	UserIdstrings  string
+	UserOlders     string
 	Users          string
 }{
 	Events:         "events",
@@ -18,5 +19,6 @@ var TableNames = struct {
 	Olders:         "olders",
 	Sources:        "sources",
 	UserIdstrings:  "user_idstrings",
+	UserOlders:     "user_olders",
 	Users:          "users",
 }
