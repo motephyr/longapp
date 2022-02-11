@@ -24,8 +24,8 @@
         <table class="border-separate border-green-800 w-full sm:text-center">
           <thead>
             <tr style="background-color: #1c4b73; color: white">
-              <th class="border-green-600">Username</th>
-              <th class="border-green-600"></th>
+              <th class="border-solid">Username</th>
+              <th class="border-solid"></th>
             </tr>
           </thead>
           <tbody>
@@ -36,12 +36,16 @@
               }"
               :key="index"
             >
-              <td class="border-green-600">
-                <a :href="`/manage/users/${user.id}/idstrings`">
+              <td class="border-solid">
                   {{ user.username }}
-                </a>
               </td>
-              <td class="border-green-600">
+              <td class="border-solid">
+                <a :href="`/manage/users/${user.id}/idstrings`">
+                  idString管理
+                </a>
+                <a :href="`/manage/users/${user.id}/groups`">
+                  影片管理
+                </a>
                 <a :href="`/manage/users/${user.id}/edit`" class="user-meta-small">
                   編輯資料
                 </a>

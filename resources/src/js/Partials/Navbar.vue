@@ -76,22 +76,6 @@
             年長者名單
           </a>
         </nav>
-        <nav
-          class="
-            flex flex-wrap
-            items-center
-            mb-5
-            text-xl
-            md:mb-0 md:pl-8 md:ml-8 md:border-l md:border-gray-200
-          "
-        >
-          <a
-            href="/manage"
-            class="mr-5 font-medium leading-6 text-gray-600 hover:text-gray-900"
-          >
-            管理頁面
-          </a>
-        </nav>
       </div>
       {{ $page.props.user && $page.props.user.username }}
       {{ $helper.today() }}

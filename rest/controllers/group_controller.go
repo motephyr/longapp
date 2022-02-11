@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"context"
 	"log"
 	"strconv"
 
@@ -13,11 +14,43 @@ import (
 	. "github.com/volatiletech/sqlboiler/v4/queries/qm"
 )
 
-type manageController struct{}
+type groupController struct{}
 
-var ManageController manageController
+var GroupController groupController
 
-func (manageController) Manage(c *fiber.Ctx) error {
+type MyObj struct {
+	models.Source       `boil:",bind"`
+	models.UserIdstring `boil:",bind"`
+}
+
+func (groupController) Index(c *fiber.Ctx) error {
+	var myObj []MyObj
+	err := models.Sources(Select("*", "c.*"), InnerJoin("user_idstrings c on c.idstring = sources.idstring"), OrderBy("datestring")).BindG(context.Background(), &myObj)
+
+	if err != nil {
+		log.Println(err)
+	}
+	datestrings := map[string]int{}
+	for _, x := range myObj {
+		if strconv.Itoa(x.UserIdstring.UserID.Int) == c.Params("id") {
+			obj := 1
+			if datestrings[x.Source.Datestring.String] != 0 {
+				obj = datestrings[x.Source.Datestring.String] + 1
+			}
+
+			datestrings[x.Source.Datestring.String] = obj
+		}
+	}
+	return inertia.Render(c,
+		"group/Index.vue", // Will render component named as Main
+		inertia.Map{
+			"datestrings": datestrings,
+			"user_id":     c.Params("id"),
+		},
+	)
+}
+
+func (groupController) Manage(c *fiber.Ctx) error {
 	datestring := c.Params("datestring")
 	sources, err := models.Sources(Where("datestring = ?", datestring), OrderBy("id")).AllG()
 	if err != nil {
@@ -25,7 +58,7 @@ func (manageController) Manage(c *fiber.Ctx) error {
 	}
 
 	return inertia.Render(c,
-		"manage/Manage.vue", // Will render component named as Main
+		"group/Manage.vue", // Will render component named as Main
 		inertia.Map{
 			"datestring": datestring,
 			"sources":    sources,
@@ -34,7 +67,7 @@ func (manageController) Manage(c *fiber.Ctx) error {
 	// return c.SendStatus(200)
 }
 
-func (manageController) CreateGroup(c *fiber.Ctx) error {
+func (groupController) CreateGroup(c *fiber.Ctx) error {
 	datestring := c.Params("datestring")
 
 	payload := struct {
@@ -69,7 +102,7 @@ func (manageController) CreateGroup(c *fiber.Ctx) error {
 
 }
 
-func (manageController) ResetData(c *fiber.Ctx) error {
+func (groupController) ResetData(c *fiber.Ctx) error {
 	datestring := c.Params("datestring")
 	models.Sources(Where("datestring = ?", datestring)).UpdateAllG(models.M{"group_id": nil})
 	models.Groups(Where("datestring = ?", datestring)).DeleteAllG()
@@ -77,7 +110,7 @@ func (manageController) ResetData(c *fiber.Ctx) error {
 	return c.JSON("ok")
 }
 
-func (manageController) DeleteData(c *fiber.Ctx) error {
+func (groupController) DeleteData(c *fiber.Ctx) error {
 	datestring := c.Params("datestring")
 	models.Sources(Where("datestring = ?", datestring)).DeleteAllG()
 	models.Groups(Where("datestring = ?", datestring)).DeleteAllG()

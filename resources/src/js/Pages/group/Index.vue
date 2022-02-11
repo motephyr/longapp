@@ -6,8 +6,8 @@
         <table class="border-separate border-green-800 w-full sm:text-center">
           <thead>
             <tr style="background-color: #1c4b73; color: white">
-              <th class="border-green-600">日期</th>
-              <th class="border-green-600">半夜活動事件數量</th>
+              <th class="border-solid">日期</th>
+              <th class="border-solid">半夜活動事件數量</th>
             </tr>
           </thead>
           <tbody>
@@ -18,10 +18,10 @@
               }"
               :key="index"
             >
-              <td class="border-green-600">
-                <a :href="`/manage/${datestring}`">{{ datestring }}</a>
+              <td class="border-solid">
+                <a :href="`/manage/users/${user_id}/groups/${datestring}`">{{ datestring }}</a>
               </td>
-              <td class="border-green-600">{{ datestrings[datestring] }}</td>
+              <td class="border-solid">{{ datestrings[datestring] }}</td>
             </tr>
           </tbody>
         </table>
@@ -36,6 +36,7 @@ export default {
   layout: Layout,
   props: {
     datestrings: Object,
+    user_id: String
   },
 };
 </script>

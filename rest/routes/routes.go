@@ -11,6 +11,7 @@ func LoadRoutes(app *fiber.App) {
 	// web := app.Group("")
 	// ApiRoutes(api)
 	// WebRoutes(web)
+	app.Post("/sources/upload", controllers.SourceController.Upload)
 
 	users := app.Group("/manage/users")
 	users.Get("/", controllers.UserController.Index)
@@ -21,17 +22,19 @@ func LoadRoutes(app *fiber.App) {
 	users.Post("/:id", controllers.UserController.Update)
 	users.Post("/:id/delete", controllers.UserController.Delete)
 
+	groups := users.Group("/:id/groups")
+
+	groups.Get("/", controllers.GroupController.Index)
+	groups.Get("/:datestring", controllers.GroupController.Manage)
+	groups.Post("/:datestring/createGroup", controllers.GroupController.CreateGroup)
+	groups.Post("/:datestring/resetData", controllers.GroupController.ResetData)
+	groups.Post("/:datestring/deleteData", controllers.GroupController.DeleteData)
+
 	idstring := users.Group("/:id/idstrings")
 	idstring.Get("/", controllers.UserIdstringController.Index)
 	idstring.Get("/new", controllers.UserIdstringController.New)
 	idstring.Post("/", controllers.UserIdstringController.Create)
 	idstring.Post("/:idstring/delete", controllers.UserIdstringController.Delete)
-
-	app.Get("/manage", controllers.IndexController.Manage)
-	app.Get("/manage/:datestring", controllers.ManageController.Manage)
-	app.Post("/manage/:datestring/createGroup", controllers.ManageController.CreateGroup)
-	app.Post("/manage/:datestring/resetData", controllers.ManageController.ResetData)
-	app.Post("/manage/:datestring/deleteData", controllers.ManageController.DeleteData)
 
 	app.Get("/auth/login", controllers.AuthController.LoginPage)
 	app.Post("/auth/login",
