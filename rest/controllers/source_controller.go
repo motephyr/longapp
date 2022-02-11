@@ -1,7 +1,11 @@
 package controllers
 
 import (
+	"fmt"
+	"io/ioutil"
+	"log"
 	"strconv"
+	"time"
 
 	"github.com/motephyr/longcare/models"
 
@@ -53,4 +57,23 @@ func (sourceController) Delete(c *fiber.Ctx) error {
 	result := modelhelper.Source.Delete(uid, &source)
 
 	return c.JSON(result)
+}
+
+func (sourceController) Upload(c *fiber.Ctx) error {
+	start := time.Now()
+	log.SetOutput(ioutil.Discard)
+	var err error
+	// Parse the multipart form:
+	if form, err := c.MultipartForm(); err == nil {
+		// => *multipart.Form
+
+		// Get all files from "documents" key:
+		files := form.File["upload"]
+
+		for _, file := range files {
+			err = modelhelper.HandleUploadIndividualFile(c, file)
+		}
+	}
+	fmt.Printf("\n%2fs", time.Since(start).Seconds())
+	return err
 }

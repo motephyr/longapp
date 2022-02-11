@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"database/sql"
 	"reflect"
 	"regexp"
 	"sort"
@@ -127,4 +128,19 @@ func Abs(x int) int {
 		return -x
 	}
 	return x
+}
+
+func Tx(db *sql.DB, fn func(tx *sql.Tx) error) error {
+	tx, err := db.Begin()
+	if err != nil {
+		return err
+	}
+
+	err = fn(tx)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	return tx.Commit()
 }
