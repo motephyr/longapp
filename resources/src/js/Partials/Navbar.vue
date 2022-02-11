@@ -93,9 +93,16 @@
           </a>
         </nav>
       </div>
+      {{ $page.props.user && $page.props.user.username }}
       {{ $helper.today() }}
       <form @submit.prevent="form.post(`/auth/logout`)">
-        <button type="submit" class="block px-4 py-2 hover:bg-red-200" :disabled="form.processing">登出</button>
+        <button
+          type="submit"
+          class="block px-4 py-2 hover:bg-red-200"
+          :disabled="form.processing"
+        >
+          登出
+        </button>
       </form>
       <!-- <div class="inline-flex items-center ml-5 space-x-6 lg:justify-end">
           <a href="#" class="text-base font-medium leading-6 text-gray-600 whitespace-no-wrap transition duration-150 ease-in-out hover:text-gray-900">

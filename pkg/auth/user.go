@@ -20,7 +20,7 @@ func User(c *fiber.Ctx) (*models.User, error) {
 		return nil, errors.New("User Not Logged In")
 	}
 
-	user, err := models.Users(Where("id = ?", userID)).OneG()
+	user, err := models.Users(Select("id", "username", "created_at"), Where("id = ?", userID)).OneG()
 	if err != nil {
 		return nil, err
 	}

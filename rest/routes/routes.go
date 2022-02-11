@@ -39,9 +39,11 @@ func LoadRoutes(app *fiber.App) {
 	app.Post("/auth/logout",
 		controllers.AuthController.Logout,
 	)
-	app.Use(middlewares.AuthWeb())
+	app.Use(middlewares.AuthWeb()) // 驗證token是否正確
+	app.Use(middlewares.GetUser)   //
 
-	app.Get("/", controllers.IndexController.IndexPage)
+	app.Get("/",
+		controllers.IndexController.IndexPage)
 	app.Get("/list", controllers.IndexController.IndexPage)
 	app.Get("/nurse", controllers.IndexController.Nurse)
 	app.Get("/nurse/:datestring", controllers.NurseController.Nurse)

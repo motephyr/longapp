@@ -5,6 +5,7 @@ import (
 	"github.com/gookit/validate"
 	inertia "github.com/motephyr/fiber-inertia"
 	"github.com/motephyr/longcare/models"
+	"github.com/motephyr/longcare/utils"
 
 	auth "github.com/motephyr/longcare/pkg/auth"
 )
@@ -47,6 +48,19 @@ func ValidateLoginPost(c *fiber.Ctx) error {
 	}
 
 	c.Locals("user", user)
+
+	return c.Next()
+}
+
+func GetUser(c *fiber.Ctx) error {
+	user, err := auth.User(c)
+	if err != nil {
+		return c.Redirect("/auth/login")
+	}
+	c.Locals("user", user)
+	inertia.Share(fiber.Map{
+		"user": utils.StructToMap(*user),
+	})
 
 	return c.Next()
 }
