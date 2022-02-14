@@ -20,18 +20,20 @@ type AppConfig struct {
 	Auth       AuthConfig `yaml:"auth"`
 	Mail       Mail       `yaml:"mail"`
 	Hash       Hash
-	View       ViewConfig     `yaml:"view"`
-	Cache      CacheConfig    `yaml:"cache"`
-	Database   DatabaseConfig `yaml:"database"`
-	Session    SessionConfig  `yaml:"session"`
-	Queue      QueueConfig    `yaml:"queue"`
-	PayPal     PayPalConfig   `yaml:"paypal"`
-	JwtSecrets JwtSecrets     `yaml:"jwt"`
-	Storage    StorageConfig  `yaml:"storage"`
-	Server     ServerConfig   `yaml:"server"`
-	Log        LogConfig      `yaml:"log"`
-	Token      Token          `yaml:"token"`
-	Profiler   ProfilerConfig `yaml:"profiler"`
+	View       ViewConfig      `yaml:"view"`
+	Cache      CacheConfig     `yaml:"cache"`
+	Database   DatabaseConfig  `yaml:"database"`
+	Session    SessionConfig   `yaml:"session"`
+	Queue      QueueConfig     `yaml:"queue"`
+	PayPal     PayPalConfig    `yaml:"paypal"`
+	JwtSecrets JwtSecrets      `yaml:"jwt"`
+	Storage    StorageConfig   `yaml:"storage"`
+	Server     ServerConfig    `yaml:"server"`
+	Log        LogConfig       `yaml:"log"`
+	Token      Token           `yaml:"token"`
+	Profiler   ProfilerConfig  `yaml:"profiler"`
+	Websocket  WebsocketConfig `yaml:"websocket"`
+
 	Flash      *flash.Flash
 	GeoIP      *ip.GeoIpDB
 	ConfigFile string
@@ -101,6 +103,7 @@ func (cfg *AppConfig) LoadComponents() {
 	_ = cfg.Session.Setup()
 	cfg.Cache.Setup()
 	cfg.Storage.Setup()
+	go cfg.Websocket.Setup()
 }
 
 func (cfg *AppConfig) LoadStatic() {

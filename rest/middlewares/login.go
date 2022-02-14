@@ -21,7 +21,7 @@ func RedirectToHomePageOnLogin(c *fiber.Ctx) error {
 func ValidateLoginPost(c *fiber.Ctx) error {
 	var login models.User
 	if err := c.BodyParser(&login); err != nil {
-		inertia.Share(fiber.Map{
+		inertia.Share(inertia.Map{
 			"flash": map[string]any{
 				"message": err.Error(),
 			},
@@ -30,7 +30,7 @@ func ValidateLoginPost(c *fiber.Ctx) error {
 	}
 	v := validate.Struct(login)
 	if !v.Validate() {
-		inertia.Share(fiber.Map{
+		inertia.Share(inertia.Map{
 			"flash": map[string]any{
 				"message": v.Errors.One(),
 			},
@@ -40,7 +40,7 @@ func ValidateLoginPost(c *fiber.Ctx) error {
 	user, err := auth.CheckLogin(login) //nolint:wsl
 
 	if err != nil {
-		inertia.Share(fiber.Map{
+		inertia.Share(inertia.Map{
 			"flash": map[string]any{
 				"message": err.Error(),
 			},
@@ -59,7 +59,7 @@ func GetUser(c *fiber.Ctx) error {
 		return c.Redirect("/auth/login")
 	}
 	c.Locals("user", user)
-	inertia.Share(fiber.Map{
+	inertia.Share(inertia.Map{
 		"user": utils.StructToMap(*user),
 	})
 
@@ -72,7 +72,7 @@ func GetFlashAndClean(c *fiber.Ctx) {
 	store := app.Http.Session.Get(c) // get/create new session
 
 	flash := store.Get("flash")
-	inertia.Share(fiber.Map{
+	inertia.Share(inertia.Map{
 		"flash": flash,
 	})
 	store.Delete("flash")

@@ -2,6 +2,7 @@ package routes
 
 import (
 	"github.com/gofiber/fiber/v2"
+	self "github.com/motephyr/longcare/app"
 	"github.com/motephyr/longcare/rest/controllers"
 	"github.com/motephyr/longcare/rest/middlewares"
 )
@@ -12,7 +13,10 @@ func LoadRoutes(app *fiber.App) {
 	// ApiRoutes(api)
 	// WebRoutes(web)
 	app.Post("/sources/upload", controllers.SourceController.Upload)
-
+	app.Get("mynotice", func(c *fiber.Ctx) error {
+		self.Http.Websocket.Server.BroadcastToNamespace("", "notice_1", "AAA")
+		return c.JSON("ok")
+	})
 	users := app.Group("/manage/users")
 	users.Get("/", controllers.UserController.Index)
 	users.Get("/new", controllers.UserController.New)

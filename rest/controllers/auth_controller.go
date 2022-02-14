@@ -20,7 +20,7 @@ func (authControler) Login(c *fiber.Ctx) error {
 	user := c.Locals("user").(*models.User)
 	_, err := auth.Login(c, user.ID, app.Http.Token.AppJwtSecret) //nolint:wsl
 	if err != nil {
-		inertia.Share(fiber.Map{
+		inertia.Share(inertia.Map{
 			"flash": map[string]any{
 				"message": err.Error(),
 			},
