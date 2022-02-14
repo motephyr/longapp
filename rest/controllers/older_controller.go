@@ -8,6 +8,7 @@ import (
 	inertia "github.com/motephyr/fiber-inertia"
 	"github.com/motephyr/longcare/models"
 	"github.com/motephyr/longcare/utils"
+	"github.com/volatiletech/null/v8"
 	"github.com/volatiletech/sqlboiler/v4/boil"
 
 	"github.com/gofiber/fiber/v2"
@@ -19,7 +20,10 @@ type olderController struct{}
 var OlderController olderController
 
 func (olderController) Index(c *fiber.Ctx) error {
-	olders, _ := models.Olders().AllG()
+	user := c.Locals("user").(*models.User)
+	olders, _ := models.Olders(
+		InnerJoin("user_olders c on c.older_id = olders.id and c.user_id=?", user.ID),
+	).AllG()
 	return inertia.Render(c,
 		"older/Index.vue", // Will render component named as Main
 		inertia.Map{
@@ -98,11 +102,17 @@ func (olderController) Edit(c *fiber.Ctx) error {
 	)
 }
 func (olderController) Create(c *fiber.Ctx) error {
+	user := c.Locals("user").(*models.User)
+
+	var userOlder models.UserOlder
 	// Validate input
 	var olderRequest models.Older
 	c.BodyParser(&olderRequest)
 
 	olderRequest.InsertG(boil.Infer())
+	userOlder.UserID = null.IntFrom(user.ID)
+	userOlder.OlderID = null.IntFrom(olderRequest.ID)
+	userOlder.InsertG(boil.Infer())
 
 	return c.Redirect("/olders/" + strconv.Itoa(olderRequest.ID))
 

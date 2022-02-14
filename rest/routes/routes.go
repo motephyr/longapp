@@ -48,7 +48,7 @@ func LoadRoutes(app *fiber.App) {
 	app.Get("/",
 		controllers.IndexController.IndexPage)
 	app.Get("/list", controllers.IndexController.IndexPage)
-	app.Get("/nurse", controllers.IndexController.Nurse)
+	app.Get("/nurse", controllers.NurseController.Index)
 	app.Get("/nurse/:datestring", controllers.NurseController.Nurse)
 	app.Post("/nurse/:datestring/groups/:group_id", controllers.NurseController.SetOlderId)
 

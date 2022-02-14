@@ -17,6 +17,48 @@ type nurseController struct{}
 
 var NurseController nurseController
 
+func (nurseController) Index(c *fiber.Ctx) error {
+	user := c.Locals("user").(*models.User)
+
+	groupsquery, err := models.Groups(
+		InnerJoin("user_olders c on c.older_id = groups.older_id and c.user_id=?", user.ID),
+		OrderBy("datestring")).AllG()
+	if err != nil {
+		log.Println(err)
+	}
+	datestrings := map[string]map[string]int{}
+	for _, x := range groupsquery {
+		obj := map[string]int{"time": 0, "longesttime": 0}
+		if datestrings[x.Datestring.String] != nil {
+			obj["time"] = datestrings[x.Datestring.String]["time"] + 1
+		} else {
+			obj["time"] = 1
+		}
+
+		duringtime, _ := strconv.Atoi(x.Duringtime.String)
+
+		if datestrings[x.Datestring.String] != nil {
+			if datestrings[x.Datestring.String]["longesttime"] > duringtime {
+				obj["longesttime"] = datestrings[x.Datestring.String]["longesttime"]
+			} else {
+				obj["longesttime"] = duringtime
+			}
+		} else {
+			obj["longesttime"] = duringtime
+		}
+
+		datestrings[x.Datestring.String] = obj
+
+	}
+
+	return inertia.Render(c,
+		"nurse/Index.vue", // Will render component named as Main
+		inertia.Map{
+			"datestrings": datestrings,
+		},
+	)
+}
+
 func (nurseController) Nurse(c *fiber.Ctx) error {
 	datestring := c.Params("datestring")
 	groups, err := models.Groups(Load("Sources"), Where("datestring = ?", datestring), OrderBy("id")).AllG()
