@@ -8,8 +8,10 @@ import (
 
 	"github.com/motephyr/longcare/app"
 	config2 "github.com/motephyr/longcare/config"
+	"github.com/motephyr/longcare/models"
 	auth "github.com/motephyr/longcare/pkg/auth"
 	"github.com/sujit-baniya/log"
+	qm "github.com/volatiletech/sqlboiler/v4/queries/qm"
 
 	"github.com/form3tech-oss/jwt-go"
 	"github.com/gofiber/fiber/v2"
@@ -232,4 +234,19 @@ func AuthWeb() func(*fiber.Ctx) error {
 			return ctx.Redirect("/auth/login")
 		},
 	})
+}
+
+func CanUserUpdateOlder(c *fiber.Ctx) error {
+	user := c.Locals("user").(*models.User)
+
+	userOlder, err := models.UserOlders(qm.Where("id = ?, user_id = ?", c.Params("id"), user.ID)).OneG()
+
+	if userOlder == nil || err != nil {
+
+		SetFlashMessage(c, "此資料您無權查看")
+
+		return c.Redirect("/")
+	}
+
+	return c.Next()
 }

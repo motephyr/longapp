@@ -2,6 +2,8 @@
   <div class="flex flex-col h-screen justify-between">
     <div class="container-fliud">
       <Navbar />
+      <Flash v-model="$page.props.flash.message" v-if="$page.props.flash && $page.props.flash.message" />
+
       <slot />
     </div>
 
@@ -22,10 +24,12 @@
 
 <script>
 import Navbar from '@/js/Partials/Navbar'
+import Flash from "@/js/Shared/Flash";
 
 export default {
   components: {
     Navbar,
+    Flash,
   },
 }
 </script>

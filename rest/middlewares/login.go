@@ -4,6 +4,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gookit/validate"
 	inertia "github.com/motephyr/fiber-inertia"
+	"github.com/motephyr/longcare/app"
 	"github.com/motephyr/longcare/models"
 	"github.com/motephyr/longcare/utils"
 
@@ -62,5 +63,31 @@ func GetUser(c *fiber.Ctx) error {
 		"user": utils.StructToMap(*user),
 	})
 
+	GetFlashAndClean(c)
+
 	return c.Next()
+}
+
+func GetFlashAndClean(c *fiber.Ctx) {
+	store := app.Http.Session.Get(c) // get/create new session
+
+	flash := store.Get("flash")
+	inertia.Share(fiber.Map{
+		"flash": flash,
+	})
+	store.Delete("flash")
+	if err := store.Save(); err != nil {
+		panic(err)
+	}
+}
+
+func SetFlashMessage(c *fiber.Ctx, message string) {
+	store := app.Http.Session.Get(c)
+
+	store.Set("flash", map[string]any{
+		"message": message,
+	})
+	if err := store.Save(); err != nil {
+		panic(err)
+	}
 }

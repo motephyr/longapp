@@ -56,8 +56,7 @@ export default {
   },
   methods: {
     login() {
-      let a = this.form.post("/auth/login");
-      console.log(a);
+      this.form.post("/auth/login");
     },
   },
 };

@@ -17,17 +17,16 @@ func (authControler) LoginPage(c *fiber.Ctx) error {
 }
 
 func (authControler) Login(c *fiber.Ctx) error {
-
-	// middlewares.ValidateLoginPost(c)
-
 	user := c.Locals("user").(*models.User)
 	_, err := auth.Login(c, user.ID, app.Http.Token.AppJwtSecret) //nolint:wsl
 	if err != nil {
+		inertia.Share(fiber.Map{
+			"flash": map[string]any{
+				"message": err.Error(),
+			},
+		})
 
-		return app.Http.Flash.WithError(c, fiber.Map{
-			"error":   true,
-			"message": err.Error(),
-		}).Redirect("auth/login")
+		return c.Redirect("auth/login")
 	}
 
 	return c.Redirect("/")
