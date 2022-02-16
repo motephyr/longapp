@@ -98,7 +98,7 @@ func (groupController) CreateGroup(c *fiber.Ctx) error {
 	source1.UpdateG(boil.Infer())
 	source2.UpdateG(boil.Infer())
 
-	return c.JSON("ok")
+	return c.Redirect("/manage/users/" + c.Params("id") + "/groups")
 
 }
 
@@ -107,7 +107,7 @@ func (groupController) ResetData(c *fiber.Ctx) error {
 	models.Sources(Where("datestring = ?", datestring)).UpdateAllG(models.M{"group_id": nil})
 	models.Groups(Where("datestring = ?", datestring)).DeleteAllG()
 
-	return c.JSON("ok")
+	return c.Redirect("/manage/users/" + c.Params("id") + "/groups")
 }
 
 func (groupController) DeleteData(c *fiber.Ctx) error {
@@ -115,5 +115,5 @@ func (groupController) DeleteData(c *fiber.Ctx) error {
 	models.Sources(Where("datestring = ?", datestring)).DeleteAllG()
 	models.Groups(Where("datestring = ?", datestring)).DeleteAllG()
 
-	return c.JSON("ok")
+	return c.Redirect("/manage/users/" + c.Params("id") + "/groups")
 }

@@ -89,17 +89,23 @@ func (nurseController) Nurse(c *fiber.Ctx) error {
 }
 
 func (nurseController) SetOlderId(c *fiber.Ctx) error {
-	older_id, _ := strconv.Atoi(c.Params("older_id"))
-	group_id, _ := strconv.Atoi(c.Params("group_id"))
-	group, err := models.Groups(Where("id = ?", group_id)).OneG()
+	var payload struct {
+		GroupId int `param:"group_id"`
+		OlderId int `form:"older_id"`
+	}
+
+	utils.GetFiberParams(c, &payload)
+
+	group, err := models.Groups(Where("id = ?", payload.GroupId)).OneG()
 	if err != nil {
 		log.Println(err)
 	}
-	group.OlderID = null.IntFrom(older_id)
+	group.OlderID = null.IntFrom(payload.OlderId)
 	_, err = group.UpdateG(boil.Infer())
 	if err != nil {
 		log.Println(err)
 	}
-	return c.JSON("ok")
+
+	return c.Redirect("/nurse/" + c.Params("datestring"))
 
 }

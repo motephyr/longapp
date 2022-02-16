@@ -9,40 +9,40 @@
       <table class="border-separate border-green-800">
         <thead>
           <tr class="bg-indigo-700 text-white">
-            <th class="border-green-600 w-1/6">時間</th>
-            <th class="border-green-600">進入空間影像</th>
-            <th class="border-green-600">離開空間影像</th>
-            <th class="border-green-600 w-1/6">事件分類</th>
-            <th class="border-green-600">護理師回報</th>
+            <th class="border-solid w-1/6">時間</th>
+            <th class="border-solid">進入空間影像</th>
+            <th class="border-solid">離開空間影像</th>
+            <th class="border-solid w-1/6">事件分類</th>
+            <th class="border-solid">護理師回報</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(data, index) of myData" :style="{backgroundColor: (index % 2 === 1) ? '#f89b3e' : '#fdf1e0'}" :key="index">
-            <td class="border-green-600 w-1/6">{{ data.sources[0].timestring }}
+            <td class="border-solid w-1/6">{{ data.sources[0].timestring }}
               {{ data.sources[1].timestring }}</td>
 
-            <td class="border-green-600" v-if="data.sources[0].url">
+            <td class="border-solid" v-if="data.sources[0].url">
               <video controls preload="none">
                 <source :src="data.sources[0].url" type="video/mp4" />
               </video>
             </td>
-            <td class="border-green-600" v-else>
+            <td class="border-solid" v-else>
               {{ data.sources[0].action }}
             </td>
-            <td class="border-green-600" v-if="data.sources[1].url">
+            <td class="border-solid" v-if="data.sources[1].url">
               <video controls preload="none">
                 <source :src="data.sources[1].url" type="video/mp4" />
               </video>
             </td>
-            <td class="border-green-600" v-else>
+            <td class="border-solid" v-else>
               {{ data.sources[1].action }}
             </td>
-            <td class="border-green-600" v-if="data.duringtime">
+            <td class="border-solid" v-if="data.duringtime">
               {{ data.remark }}
               <br />
               活動時間: {{data.duringtime}}秒
             </td>
-            <td class="border-green-600">
+            <td class="border-solid">
               <form method="POST" :action="`/nurse/${datestring}/groups/${data.id}`">
 
                 姓名∶

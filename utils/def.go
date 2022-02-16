@@ -2,10 +2,14 @@ package utils
 
 import (
 	"database/sql"
+	"log"
 	"reflect"
 	"regexp"
 	"sort"
+	"strconv"
 	"strings"
+
+	"github.com/gofiber/fiber/v2"
 )
 
 var matchFirstCap = regexp.MustCompile("(.)([A-Z][a-z]+)")
@@ -143,4 +147,41 @@ func Tx(db *sql.DB, fn func(tx *sql.Tx) error) error {
 	}
 
 	return tx.Commit()
+}
+
+func GetFiberParams(c *fiber.Ctx, payload interface{}) error {
+
+	v := reflect.ValueOf(payload).Elem()
+	t := v.Type()
+	for i := 0; i < v.NumField(); i++ {
+
+		file := t.Field(i)
+
+		// name := file.Name
+		typeValue := file.Type.String()
+		// tag := string(file.Tag)
+
+		if jt, ok := file.Tag.Lookup("param"); ok {
+			paramsName := strings.Split(jt, ",")[0]
+			value := c.Params(paramsName)
+
+			fieldVal := v.Field(i)
+
+			if typeValue == "int" {
+				value, _ := strconv.Atoi(value)
+				fieldVal.Set(reflect.ValueOf(value))
+			} else if typeValue == "string" {
+
+				fieldVal.Set(reflect.ValueOf(value))
+
+			}
+		}
+	}
+	err := c.BodyParser(payload)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	return nil
+
 }

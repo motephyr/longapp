@@ -97,6 +97,7 @@ require (
 
 require (
 	github.com/gocarina/gocsv v0.0.0-20211203214250-4735fba0c1d9
+	github.com/googollee/go-socket.io v1.6.1
 	github.com/kat-co/vala v0.0.0-20170210184112-42e1d8b61f12
 	github.com/lib/pq v1.10.4
 	github.com/volatiletech/null/v8 v8.1.2
@@ -106,6 +107,5 @@ require (
 require (
 	github.com/gofrs/uuid v4.0.0+incompatible // indirect
 	github.com/gomodule/redigo v1.8.4 // indirect
-	github.com/googollee/go-socket.io v1.6.1 // indirect
 	github.com/gorilla/websocket v1.4.2 // indirect
 )
