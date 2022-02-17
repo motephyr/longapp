@@ -175,7 +175,7 @@ export default {
     todaysumtime: Number,
   },
   created() {
-    this.series[0].data = this.groups.map((group) => {
+    this.series[0].data = this.groups ? this.groups.map((group) => {
       return {
         x: group.datestring,
         y: [
@@ -197,7 +197,7 @@ export default {
             ),
         ],
       };
-    });
+    }) : [];
   },
   data: function () {
     return {

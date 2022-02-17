@@ -64,6 +64,9 @@ func LoadRoutes(app *fiber.App) {
 	// sources.Post("/:id/delete", controllers.SourceController.Delete)
 
 	olders := app.Group("olders")
+	olders.Get("/query", controllers.OlderController.Query)
+	olders.Get("/query/:id", controllers.OlderController.Query)
+
 	olders.Get("/", controllers.OlderController.Index)
 	olders.Get("/new", controllers.OlderController.New)
 	olders.Get("/:id/edit", middlewares.CanUserUpdateOlder, controllers.OlderController.Edit)

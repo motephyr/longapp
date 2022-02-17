@@ -66,6 +66,7 @@
 
 <script>
 import Layout from "@/js/Layout/Master";
+import axios from 'axios';
 
 export default {
   layout: Layout,

@@ -64,5 +64,8 @@ export default {
       this.text = "";
     },
   },
+  destroyed(){
+    this.sockets.unsubscribe(`notice_${this.user.id}`)
+  }
 };
 </script>

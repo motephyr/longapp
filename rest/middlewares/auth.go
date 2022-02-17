@@ -10,8 +10,9 @@ import (
 	config2 "github.com/motephyr/longcare/config"
 	"github.com/motephyr/longcare/models"
 	auth "github.com/motephyr/longcare/pkg/auth"
-	"github.com/sujit-baniya/log"
 	qm "github.com/volatiletech/sqlboiler/v4/queries/qm"
+
+	"log"
 
 	"github.com/form3tech-oss/jwt-go"
 	"github.com/gofiber/fiber/v2"
@@ -95,7 +96,7 @@ func Authenticate(config ...AuthConfig) fiber.Handler {
 		}
 	}
 	if cfg.SigningKey == nil && len(cfg.SigningKeys) == 0 {
-		log.Error().Msg("Fiber: JWT middleware requires signing key")
+		log.Println("Fiber: JWT middleware requires signing key")
 	}
 	if cfg.SigningMethod == "" {
 		cfg.SigningMethod = "HS256"
@@ -239,9 +240,11 @@ func AuthWeb() func(*fiber.Ctx) error {
 func CanUserUpdateOlder(c *fiber.Ctx) error {
 	user := c.Locals("user").(*models.User)
 
-	userOlder, err := models.UserOlders(qm.Where("id = ?, user_id = ?", c.Params("id"), user.ID)).OneG()
+	userOlder, err := models.UserOlders(qm.Where("older_id = ? and user_id = ?", c.Params("id"), user.ID)).OneG()
 
 	if userOlder == nil || err != nil {
+		log.Println(userOlder)
+		log.Println(err)
 
 		SetFlashMessage(c, "此資料您無權查看")
 

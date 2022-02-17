@@ -1,11 +1,13 @@
 package controllers
 
 import (
+	"database/sql"
 	"log"
 	"strconv"
 	"time"
 
 	inertia "github.com/motephyr/fiber-inertia"
+	"github.com/motephyr/longcare/app"
 	"github.com/motephyr/longcare/models"
 	"github.com/motephyr/longcare/utils"
 	"github.com/volatiletech/null/v8"
@@ -19,11 +21,28 @@ type olderController struct{}
 
 var OlderController olderController
 
+func (olderController) Query(c *fiber.Ctx) error {
+	user := c.Locals("user").(*models.User)
+
+	query := utils.GetSqlQuery(c.Query("query"))
+	if c.Params("id") != "" {
+		query = append(query, And("id = ?", c.Params("id")))
+	} else {
+		query = append(query, InnerJoin("user_olders c on c.older_id = olders.id and c.user_id=?", user.ID))
+	}
+	olders, _ := models.Olders(query...).AllG()
+	log.Println(olders)
+	return c.JSON(olders)
+}
+
 func (olderController) Index(c *fiber.Ctx) error {
 	user := c.Locals("user").(*models.User)
-	olders, _ := models.Olders(
-		InnerJoin("user_olders c on c.older_id = olders.id and c.user_id=?", user.ID),
-	).AllG()
+
+	query := utils.GetSqlQuery(c.Query("query"))
+	query = append(query, InnerJoin("user_olders c on c.older_id = olders.id and c.user_id=?", user.ID))
+
+	olders, _ := models.Olders(query...).AllG()
+
 	return inertia.Render(c,
 		"older/Index.vue", // Will render component named as Main
 		inertia.Map{
@@ -109,10 +128,17 @@ func (olderController) Create(c *fiber.Ctx) error {
 	var olderRequest models.Older
 	c.BodyParser(&olderRequest)
 
-	olderRequest.InsertG(boil.Infer())
-	userOlder.UserID = null.IntFrom(user.ID)
-	userOlder.OlderID = null.IntFrom(olderRequest.ID)
-	userOlder.InsertG(boil.Infer())
+	err := utils.Tx(app.Http.Database.DB, func(tx *sql.Tx) error {
+		olderRequest.InsertG(boil.Infer())
+		userOlder.UserID = null.IntFrom(user.ID)
+		userOlder.OlderID = null.IntFrom(olderRequest.ID)
+		userOlder.InsertG(boil.Infer())
+		return nil
+	})
+
+	if err != nil { // Load clients from file
+		c.JSON("Transaction fail.")
+	}
 
 	return c.Redirect("/olders/" + strconv.Itoa(olderRequest.ID))
 
@@ -134,10 +160,14 @@ func (olderController) Delete(c *fiber.Ctx) error {
 	uid, _ := strconv.Atoi(c.Params("id"))
 	older.ID = uid
 
-	rowsAff, _ := older.DeleteG()
-	if rowsAff == 0 {
-		return c.JSON(false)
-	} else {
-		return c.JSON(true)
+	userOlder, err := models.UserOlders(Where("older_id = ?", c.Params("id"))).OneG()
+
+	userOlder.DeleteG()
+
+	_, err = older.DeleteG()
+	if err != nil { // Load clients from file
+		log.Println(err)
 	}
+	return c.Redirect("/olders/")
+
 }

@@ -38,6 +38,16 @@ func (s *WebsocketConfig) Setup() {
 		return nil
 	})
 
+	server.OnEvent("/", "join", func(s socketio.Conn, msg map[string]string) {
+		log.Println("join " + msg["roomName"])
+		s.Join(msg["roomName"])
+	})
+
+	server.OnEvent("/", "unjoin", func(s socketio.Conn, msg map[string]string) {
+		log.Println("unjoin " + msg["roomName"])
+		s.Leave(msg["roomName"])
+	})
+
 	server.OnEvent("/", "notice", func(s socketio.Conn, msg map[string]string) {
 		s.Emit("notice_1", "have "+msg["msg"])
 	})

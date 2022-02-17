@@ -6,8 +6,11 @@ import (
 
 	"github.com/motephyr/longcare/app"
 	"github.com/motephyr/longcare/migrations"
+	"github.com/motephyr/longcare/models"
+	"github.com/motephyr/longcare/pkg/modelhelper"
 	"github.com/motephyr/longcare/rest/routes"
 	"github.com/pyroscope-io/pyroscope/pkg/agent/profiler"
+	"github.com/volatiletech/sqlboiler/v4/boil"
 )
 
 func main() {
@@ -26,7 +29,11 @@ func main() {
 	if *migrate {
 		migrations.Migrate()
 	} else {
+		models.AddOlderHook(boil.AfterUpdateHook, modelhelper.Older.AfterUpdateHook)
+		models.AddUserOlderHook(boil.AfterDeleteHook, modelhelper.UserOlder.AfterDeleteHook)
+		models.AddUserOlderHook(boil.AfterInsertHook, modelhelper.UserOlder.AfterInsertHook)
 		routes.LoadRoutes(app.Http.Server.App)
+
 		app.Http.Route404()
 		log.Fatal(app.Http.Server.ServeWithGraceFullShutdown())
 	}
