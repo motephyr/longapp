@@ -9,9 +9,9 @@ import (
 
 	"github.com/gocarina/gocsv"
 	"github.com/gofiber/fiber/v2"
-	"github.com/motephyr/longcare/app"
-	"github.com/motephyr/longcare/models"
-	"github.com/motephyr/longcare/utils"
+	"github.com/motephyr/longapp/app"
+	"github.com/motephyr/longapp/models"
+	"github.com/motephyr/longapp/utils"
 	"github.com/sujit-baniya/xid"
 	"github.com/volatiletech/null/v8"
 	"github.com/volatiletech/sqlboiler/v4/boil"

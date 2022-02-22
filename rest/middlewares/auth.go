@@ -6,10 +6,10 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/motephyr/longcare/app"
-	config2 "github.com/motephyr/longcare/config"
-	"github.com/motephyr/longcare/models"
-	auth "github.com/motephyr/longcare/pkg/auth"
+	"github.com/motephyr/longapp/app"
+	config2 "github.com/motephyr/longapp/config"
+	"github.com/motephyr/longapp/models"
+	auth "github.com/motephyr/longapp/pkg/auth"
 	qm "github.com/volatiletech/sqlboiler/v4/queries/qm"
 
 	"log"

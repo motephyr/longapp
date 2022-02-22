@@ -1,4 +1,4 @@
-module github.com/motephyr/longcare
+module github.com/motephyr/longapp
 
 go 1.18
 
@@ -102,6 +102,7 @@ require (
 	github.com/lib/pq v1.10.4
 	github.com/volatiletech/null/v8 v8.1.2
 	github.com/volatiletech/randomize v0.0.1
+	github.com/webview/webview v0.0.0-20220220034630-decf494141c0
 )
 
 require (

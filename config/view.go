@@ -1,12 +1,13 @@
 package config
 
 import (
+	"embed"
 	"encoding/json"
 	"flag"
-	"path/filepath"
+	"io/fs"
+	"net/http"
 
 	"github.com/gofiber/template/html"
-	"github.com/markbates/pkger"
 	"github.com/tidwall/gjson"
 	"github.com/tidwall/sjson"
 )
@@ -20,14 +21,20 @@ type ViewConfig struct {
 	Template TemplateConfig `yaml:"template"`
 }
 
+var EmbedDirStaticView embed.FS
+
 func (v *ViewConfig) Load(path string) {
-	path = MakeDir(filepath.Join(path, v.Template.Path))
-	v.Template.TemplateEngine = html.NewFileSystem(pkger.Dir(path), v.Template.Extension)
+	// viewPath := MakeDir(filepath.Join(path, v.Template.Path))
+
+	contentFS, _ := fs.Sub(EmbedDirStaticView, "resources/views")
+
+	v.Template.TemplateEngine = html.NewFileSystem(http.FS(contentFS), v.Template.Extension)
 
 	is_dev := flag.Bool("dev", false, "development mode")
 	flag.Parse()
 
-	Manifest.Init(*is_dev, "./public/mix-manifest.json")
+	Manifest.Init(*is_dev, path+"/public/mix-manifest.json")
+
 	v.Template.TemplateEngine.AddFunc("asset", Manifest.AssetHelper)
 	v.Template.TemplateEngine.AddFunc("gjsonGet", gjson.Get)
 	v.Template.TemplateEngine.AddFunc("sjsonSet", sjson.Set)

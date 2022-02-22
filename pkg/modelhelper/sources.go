@@ -3,8 +3,8 @@ package modelhelper
 import (
 	"log"
 
-	"github.com/motephyr/longcare/app"
-	"github.com/motephyr/longcare/models"
+	"github.com/motephyr/longapp/app"
+	"github.com/motephyr/longapp/models"
 
 	"github.com/volatiletech/sqlboiler/v4/boil"
 	. "github.com/volatiletech/sqlboiler/v4/queries/qm"

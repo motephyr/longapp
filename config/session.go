@@ -17,31 +17,36 @@ type SessionConfig struct {
 	DB     int    `yaml:"db" env:"SESSION_DB"`
 }
 
-func (s *SessionConfig) Setup() error {
-	provider, err := redis.New(redis.Config{
-		KeyPrefix:   "verify_rest_",
-		Addr:        fmt.Sprintf("%s:%d", s.Host, s.Port),
-		PoolSize:    8,                //nolint:gomnd
-		IdleTimeout: 30 * time.Second, //nolint:gomnd
-		DB:          s.DB,
-		/*MaxRetries:         0,
-		MinRetryBackoff:    0,
-		MaxRetryBackoff:    0,
-		DialTimeout:        0,
-		ReadTimeout:        0,
-		WriteTimeout:       0,
-		MinIdleConns:       0,
-		MaxConnAge:         0,
-		PoolTimeout:        0,
-		IdleCheckFrequency: 0,
-		TLSConfig:          nil,*/
-	})
-	if err != nil {
-		return err
+func (s *SessionConfig) Setup() {
+	switch s.Driver {
+	case "memcache":
+
+	case "local":
+		s.Session = session.New()
+
+	default:
+		provider, _ := redis.New(redis.Config{
+			KeyPrefix:   "verify_rest_",
+			Addr:        fmt.Sprintf("%s:%d", s.Host, s.Port),
+			PoolSize:    8,                //nolint:gomnd
+			IdleTimeout: 30 * time.Second, //nolint:gomnd
+			DB:          s.DB,
+			/*MaxRetries:         0,
+			MinRetryBackoff:    0,
+			MaxRetryBackoff:    0,
+			DialTimeout:        0,
+			ReadTimeout:        0,
+			WriteTimeout:       0,
+			MinIdleConns:       0,
+			MaxConnAge:         0,
+			PoolTimeout:        0,
+			IdleCheckFrequency: 0,
+			TLSConfig:          nil,*/
+		})
+
+		s.Session = session.New(session.Config{
+			Provider: provider,
+		})
 	}
-	s.Session = session.New(session.Config{
-		Provider: provider,
-	})
-	return nil
 
 }

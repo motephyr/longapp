@@ -4,12 +4,12 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/motephyr/longcare/config"
+	"github.com/motephyr/longapp/config"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/session/v2"
-	"github.com/motephyr/longcare/app"
-	"github.com/motephyr/longcare/models"
+	"github.com/motephyr/longapp/app"
+	"github.com/motephyr/longapp/models"
 	. "github.com/volatiletech/sqlboiler/v4/queries/qm"
 )
 

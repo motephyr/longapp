@@ -42,14 +42,11 @@ type ServerConfig struct {
 	UploadSize     int    `mapstructure:"UPLOAD_SIZE" yaml:"upload_size" env:"UPLOAD_SIZE" env-default:"400"`
 }
 
-func (s *ServerConfig) LoadPath() {
+func (s *ServerConfig) LoadPath(path string) {
 	if s.Url == "" {
 		s.Url = fmt.Sprintf("http://localhost:%s", s.Port)
 	}
-	path, _ := os.Getwd()
-	if s.ExecPath {
-		path = getPath()
-	}
+
 	s.Path = path
 	s.UploadPath = MakeDir(filepath.Join(path, s.UploadPath))
 	s.AssetPath = MakeDir(filepath.Join(path, s.AssetPath))
@@ -70,6 +67,15 @@ func (s *ServerConfig) Setup() {
 		DisableStartupMessage: true,
 		ProxyHeader:           s.ProxyHeader,
 	})
+
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, os.Interrupt)
+	go func() {
+		_ = <-c
+		fmt.Println("Gracefully shutting down...")
+		_ = s.App.Shutdown()
+	}()
+
 }
 
 //

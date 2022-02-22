@@ -1,3 +1,33 @@
+.PHONY: all
+
+all: clean build run
+
+.PHONY: clean
+
+clean:
+	@rm -rf ./helloworld.app ./public
+	@echo "[✔️] Clean complete!"
+
+.PHONY: build
+
+build:
+	@npm install
+	@npm run prod
+	@mkdir -p ./helloworld.app/Contents/MacOS/
+	@go build -o ./helloworld.app/Contents/MacOS/helloworld
+	@cp .env ./helloworld.app/Contents/MacOS/
+	@cp config.yml ./helloworld.app/Contents/MacOS/
+	@cp -R public ./helloworld.app/Contents/MacOS/public
+	@echo "[✔️] Build complete!"
+
+.PHONY: run
+
+run:
+	@open ./helloworld.app
+	@echo "[✔️] App is running!"
+
+
+
 include .env
 export
 

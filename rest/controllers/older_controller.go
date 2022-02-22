@@ -7,9 +7,9 @@ import (
 	"time"
 
 	inertia "github.com/motephyr/fiber-inertia"
-	"github.com/motephyr/longcare/app"
-	"github.com/motephyr/longcare/models"
-	"github.com/motephyr/longcare/utils"
+	"github.com/motephyr/longapp/app"
+	"github.com/motephyr/longapp/models"
+	"github.com/motephyr/longapp/utils"
 	"github.com/volatiletech/null/v8"
 	"github.com/volatiletech/sqlboiler/v4/boil"
 

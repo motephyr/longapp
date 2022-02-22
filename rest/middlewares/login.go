@@ -4,11 +4,11 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gookit/validate"
 	inertia "github.com/motephyr/fiber-inertia"
-	"github.com/motephyr/longcare/app"
-	"github.com/motephyr/longcare/models"
-	"github.com/motephyr/longcare/utils"
+	"github.com/motephyr/longapp/app"
+	"github.com/motephyr/longapp/models"
+	"github.com/motephyr/longapp/utils"
 
-	auth "github.com/motephyr/longcare/pkg/auth"
+	auth "github.com/motephyr/longapp/pkg/auth"
 )
 
 func RedirectToHomePageOnLogin(c *fiber.Ctx) error {

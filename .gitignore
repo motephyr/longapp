@@ -17,3 +17,4 @@ stats/
 public/
 
 .env*
+helloworld.app/

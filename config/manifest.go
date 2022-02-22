@@ -49,8 +49,8 @@ func (manifest) Init(dev bool, fsPath string) {
 
 // Read webpack-manifest-plugin format manifest
 func ReadManifest(path string) (AssetList, error) {
-	//log.Println("read:", path+"/manifest.json")
 	data, err := ioutil.ReadFile(path)
+
 	if err != nil {
 		return nil, err
 	}

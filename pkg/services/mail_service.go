@@ -5,8 +5,8 @@ import (
 	"time"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/motephyr/longcare/app"
-	"github.com/motephyr/longcare/utils"
+	"github.com/motephyr/longapp/app"
+	"github.com/motephyr/longapp/utils"
 )
 
 func SendPasswordResetEmail(email string, baseURL string) {

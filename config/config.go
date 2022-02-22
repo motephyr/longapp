@@ -40,14 +40,21 @@ type AppConfig struct {
 }
 
 func (cfg *AppConfig) Setup() {
-	err := godotenv.Load()
+
+	ex, err := os.Executable()
+	if err != nil {
+		panic(err)
+	}
+	exPath := filepath.Dir(ex)
+	fmt.Println("exPath: " + exPath)
+	err = godotenv.Load()
 	// read configuration from the file and environment variables
-	if err = cleanenv.ReadConfig(cfg.ConfigFile, cfg); err != nil {
+	if err = cleanenv.ReadConfig(exPath+"/"+cfg.ConfigFile, cfg); err != nil {
 		fmt.Println(err)
 		os.Exit(2)
 	}
-	cfg.Server.LoadPath()
-	cfg.View.Load(cfg.Server.Path)
+	cfg.Server.LoadPath(exPath)
+	cfg.View.Load(exPath)
 	cfg.Mail.View = &cfg.View
 	cfg.Server.TemplateEngine = cfg.View.Template.TemplateEngine
 	cfg.Server.Setup()
@@ -56,8 +63,8 @@ func (cfg *AppConfig) Setup() {
 		modelFile := filepath.Join(cfg.Server.AssetPath, "rbac_model.conf")
 		cfg.Auth.Setup(cfg.Database.DB, modelFile)
 	}
-	path := MakeDir(filepath.Join(cfg.Server.AssetPath, "GeoLite2-City.mmdb"))
-	cfg.GeoIP = ip.NewGeoIpDB(path)
+	// path := MakeDir(filepath.Join(cfg.Server.AssetPath, "GeoLite2-City.mmdb"))
+	// cfg.GeoIP = ip.NewGeoIpDB(path)
 }
 
 func (cfg *AppConfig) PrepareLog() {
@@ -100,7 +107,7 @@ func (cfg *AppConfig) LoadComponents() {
 		}),
 	)
 	_ = cfg.Database.Setup()
-	_ = cfg.Session.Setup()
+	cfg.Session.Setup()
 	cfg.Cache.Setup()
 	cfg.Storage.Setup()
 	go cfg.Websocket.Setup()

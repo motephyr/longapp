@@ -3,9 +3,9 @@ package controllers
 import (
 	"github.com/gofiber/fiber/v2"
 	inertia "github.com/motephyr/fiber-inertia"
-	"github.com/motephyr/longcare/app"
-	"github.com/motephyr/longcare/models"
-	"github.com/motephyr/longcare/pkg/auth"
+	"github.com/motephyr/longapp/app"
+	"github.com/motephyr/longapp/models"
+	"github.com/motephyr/longapp/pkg/auth"
 )
 
 type authControler struct{}

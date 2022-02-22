@@ -6,10 +6,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/motephyr/longcare/utils"
+	"github.com/motephyr/longapp/utils"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/motephyr/longcare/app"
+	"github.com/motephyr/longapp/app"
 )
 
 func ValidatePasswordReset(c *fiber.Ctx) error {

@@ -9,7 +9,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/pprof"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	inertia "github.com/motephyr/fiber-inertia"
-	"github.com/motephyr/longcare/config"
+	"github.com/motephyr/longapp/config"
 )
 
 var Http *config.AppConfig

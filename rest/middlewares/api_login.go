@@ -3,7 +3,7 @@ package middlewares
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gookit/validate"
-	"github.com/motephyr/longcare/models"
+	"github.com/motephyr/longapp/models"
 )
 
 func ValidateApiLoginPost(c *fiber.Ctx) error {

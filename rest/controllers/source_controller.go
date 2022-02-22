@@ -7,10 +7,10 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/motephyr/longcare/models"
+	"github.com/motephyr/longapp/models"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/motephyr/longcare/pkg/modelhelper"
+	"github.com/motephyr/longapp/pkg/modelhelper"
 )
 
 type sourceController struct{}

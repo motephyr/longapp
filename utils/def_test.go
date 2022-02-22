@@ -216,3 +216,9 @@ func TestGetSqlQueryPage4(t *testing.T) {
 		t.Log("succeess")
 	}
 }
+
+func BenchmarkGetSqlQuery(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		GetSqlQuery(`{"q":{"search_string":""},"where":{},"page":1,"with":["Groups"],"sort":"created_at desc"}`)
+	}
+}

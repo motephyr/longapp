@@ -16,6 +16,8 @@ type StorageConfig struct {
 func (c *StorageConfig) Setup() {
 	switch c.Driver {
 	case "memcache":
+
+	case "local":
 	default:
 		// Initialize custom config
 		store := redis.New(redis.Config{

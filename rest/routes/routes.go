@@ -2,9 +2,9 @@ package routes
 
 import (
 	"github.com/gofiber/fiber/v2"
-	self "github.com/motephyr/longcare/app"
-	"github.com/motephyr/longcare/rest/controllers"
-	"github.com/motephyr/longcare/rest/middlewares"
+	self "github.com/motephyr/longapp/app"
+	"github.com/motephyr/longapp/rest/controllers"
+	"github.com/motephyr/longapp/rest/middlewares"
 )
 
 func LoadRoutes(app *fiber.App) {

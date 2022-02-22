@@ -1,6 +1,6 @@
 
 # Installation
-* Clone the repo `git clone https://github.com/motephyr/longcare.git`
+* Clone the repo `git clone https://github.com/motephyr/longapp.git`
 * Make sure you have installed: Redis, MySQL or Postgres
 * Copy .env.sample to .env
 * To build the frontend, install nodejs
