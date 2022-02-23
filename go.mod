@@ -68,7 +68,7 @@ require (
 	github.com/pelletier/go-toml v1.9.4 // indirect
 	github.com/philhofer/fwd v1.1.1 // indirect
 	github.com/pyroscope-io/dotnetdiag v1.2.1 // indirect
-	github.com/rogpeppe/go-internal v1.6.1 // indirect
+	github.com/rogpeppe/go-internal v1.8.0 // indirect
 	github.com/savsgio/dictpool v0.0.0-20210921080634-84324d0689d7 // indirect
 	github.com/savsgio/gotils v0.0.0-20211223103454-d0aaa54c5899 // indirect
 	github.com/spf13/afero v1.6.0 // indirect
@@ -105,8 +105,11 @@ require (
 	github.com/webview/webview v0.0.0-20220220034630-decf494141c0
 )
 
+require github.com/go-gorp/gorp/v3 v3.0.2 // indirect
+
 require (
 	github.com/gofrs/uuid v4.0.0+incompatible // indirect
 	github.com/gomodule/redigo v1.8.4 // indirect
 	github.com/gorilla/websocket v1.4.2 // indirect
+	github.com/rubenv/sql-migrate v1.1.1
 )

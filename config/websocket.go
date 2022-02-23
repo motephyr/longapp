@@ -73,7 +73,7 @@ func (s *WebsocketConfig) Setup() {
 	defer server.Close()
 
 	http.Handle("/socket.io/", server)
-	log.Println("Websocket Serving at localhost:5001...")
-	log.Fatal(http.ListenAndServe(":5001", nil))
+	log.Println("Websocket Serving at localhost:15001...")
+	log.Fatal(http.ListenAndServe(":15001", nil))
 
 }

@@ -11,7 +11,7 @@ import SocketIO from 'socket.io-client'
 
 Vue.use(new VueSocketIO({
   debug: true,
-  connection: SocketIO('http://localhost:5001'),
+  connection: SocketIO('http://localhost:15001'),
   vuex: {} //Optional options
 }))
 
