@@ -92,13 +92,7 @@
           <!--Graph Card-->
           <div class="bg-white border-transparent rounded-lg shadow-xl">
             <div class="p-5">
-              <VueApexCharts
-                width="100%"
-                height="200%"
-                type="rangeBar"
-                :options="options"
-                :series="series"
-              ></VueApexCharts>
+ 
             </div>
           </div>
           <!--/Graph Card-->
@@ -159,14 +153,10 @@
 
 <script>
 import Layout from "@/js/Layout/Master";
-import VueApexCharts from 'vue-apexcharts'
 
 export default {
   layout: Layout,
-  components: {
-    // Head,
-    VueApexCharts
-  },
+
   props: {
     older: Object,
     groups: Array,

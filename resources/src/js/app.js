@@ -15,6 +15,9 @@ Vue.use(new VueSocketIO({
   vuex: {} //Optional options
 }))
 
+import vuetify from "./Plugin/vuetify";
+
+
 
 createInertiaApp({
   resolve: name => require(`../js/Pages/${name}`),
@@ -22,6 +25,7 @@ createInertiaApp({
     Vue.use(plugin)
 
     new Vue({
+      vuetify,
       render: h => h(App, props),
     }).$mount(el)
   },

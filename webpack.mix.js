@@ -1,5 +1,6 @@
 let mix = require('laravel-mix');
 let path = require('path')
+
 /*
  |--------------------------------------------------------------------------
  | Mix Asset Management
@@ -14,10 +15,8 @@ mix.alias({
     '@': path.join(__dirname, '/resources/src')
 });
 
-mix.js("resources/src/js/app.js", "js")
-    .postCss("resources/src/css/app.css", "css",[
-        require("tailwindcss"),
-    ]).vue()
+
+mix.js('resources/src/js/app.js', 'js').postCss("resources/src/css/app.css", "css").vue()
 
 // Full API
 // mix.js(src, output);
