@@ -1,112 +1,51 @@
 <template>
-  <header class="w-full px-8 text-gray-700" style="background-color: #f89b3e">
-    <div
-      class="
-        container
-        flex flex-col flex-wrap
-        items-center
-        justify-between
-        py-5
-        mx-auto
-        md:flex-row
-        max-w-7xl
-      "
-    >
-      <div class="relative flex flex-col md:flex-row">
-        <a
-          href="/"
-          class="
-            flex
-            items-center
-            mb-5
-            font-medium
-            text-gray-900
-            lg:w-auto lg:items-center lg:justify-center
-            md:mb-0
-          "
-        >
-          <img :src="logo" width="200px" />
-        </a>
+    <div>
+      <v-list-item>
+        <v-list-item-content>
+          <v-list-item-title class="text-h6"> Application </v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
 
-        <nav
-          class="
-            flex flex-wrap
-            items-center
-            mb-5
-            text-xl
-            md:mb-0 md:pl-8 md:ml-8 md:border-l md:border-gray-200
-          "
-        >
-          <a
-            href="/list"
-            class="mr-5 font-medium leading-6 text-gray-600 hover:text-gray-900"
-          >
-            首頁
-          </a>
-        </nav>
-        <nav
-          class="
-            flex flex-wrap
-            items-center
-            mb-5
-            text-xl
-            md:mb-0 md:pl-8 md:ml-8 md:border-l md:border-gray-200
-          "
-        >
-          <a
-            href="/nurse"
-            class="mr-5 font-medium leading-6 text-gray-600 hover:text-gray-900"
-          >
-            事件分類
-          </a>
-        </nav>
-        <nav
-          class="
-            flex flex-wrap
-            items-center
-            mb-5
-            text-xl
-            md:mb-0 md:pl-8 md:ml-8 md:border-l md:border-gray-200
-          "
-        >
-          <a
-            href="/olders"
-            class="mr-5 font-medium leading-6 text-gray-600 hover:text-gray-900"
-          >
-            年長者名單
-          </a>
-        </nav>
-      </div>
-      {{ $page.props.user && $page.props.user.username }}
-      {{ $helper.today() }}
-      <form @submit.prevent="form.post(`/auth/logout`)">
-        <button
-          type="submit"
-          class="block px-4 py-2 hover:bg-red-200"
-          :disabled="form.processing"
-        >
-          登出
-        </button>
-      </form>
-      <!-- <div class="inline-flex items-center ml-5 space-x-6 lg:justify-end">
-          <a href="#" class="text-base font-medium leading-6 text-gray-600 whitespace-no-wrap transition duration-150 ease-in-out hover:text-gray-900">
-              Sign in
-          </a>
-          <a href="#" class="inline-flex items-center justify-center px-4 py-2 text-base font-medium leading-6 text-white whitespace-no-wrap bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600">
-              Sign up
-          </a>
-      </div> -->
+      <v-divider></v-divider>
+
+      <v-list dense nav>
+        <v-list-item v-for="item in items" :key="item.title" link>
+          <v-list-item-icon>
+            <img :src="item.icon" width="24" height="24" />
+          </v-list-item-icon>
+
+          <v-list-item-content>
+            <v-list-item-title>{{ item.title }}</v-list-item-title>
+          </v-list-item-content>
+
+        </v-list-item>
+        <v-list-item>
+          <v-list-item-icon>
+            <v-icon>mdi-plus</v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-content>
+            <v-list-item-title>Add New Wallet</v-list-item-title>
+          </v-list-item-content>
+          </v-list-item>
+      </v-list>
     </div>
-  </header>
 </template>
 
 <script>
-import logo from "@/img/logo.png";
+import binance from "@/img/organization/binance.png";
+import eth from "@/img/organization/eth.png";
+import ftx from "@/img/organization/ftx.png";
+
 export default {
   data() {
     return {
-      logo,
       form: this.$inertia.form(),
+      items: [
+        { title: "Binance", icon: binance },
+        { title: "FTX", icon: ftx },
+        { title: "Eth Wallet", icon: eth },
+      ],
     };
   },
 };
