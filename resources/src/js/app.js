@@ -16,9 +16,6 @@ Vue.use(new VueSocketIO({
 }))
 
 import vuetify from "./Plugin/vuetify";
-
-
-
 createInertiaApp({
   resolve: name => require(`../js/Pages/${name}`),
   setup({ el, App, props, plugin }) {

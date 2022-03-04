@@ -33,7 +33,7 @@ func (v *ViewConfig) Load(path string) {
 	is_dev := flag.Bool("dev", false, "development mode")
 	flag.Parse()
 
-	Manifest.Init(*is_dev, path+"/public/mix-manifest.json")
+	Manifest.Init(*is_dev, path+"/public/manifest.json")
 
 	v.Template.TemplateEngine.AddFunc("asset", Manifest.AssetHelper)
 	v.Template.TemplateEngine.AddFunc("gjsonGet", gjson.Get)

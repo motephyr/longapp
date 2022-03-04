@@ -5,13 +5,13 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    {{asset "/css/app.css"}}
+    {{asset "app.css"}}
     <!-- <link rel="icon" type="image/x-icon" href="/assets/favicon.ico"> -->
 </head>
 
 <body>
     <div id="app" data-page="{{ .Page }}"></div>
-    {{asset "/js/app.js"}}
+    {{asset "app.js"}}
     
     <!-- {{ .Page }}<br />
     {{ index (unmarshal .Page) "props" }}<br>

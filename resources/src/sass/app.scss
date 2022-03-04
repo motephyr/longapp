@@ -1,0 +1,5 @@
+// Variables
+@import '_variable.scss';
+$color-pack: false;
+
+@import '~vuetify/src/styles/main.sass'; // include this after your variables
